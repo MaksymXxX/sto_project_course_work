@@ -1,0 +1,618 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  position: relative;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.back-navigation {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 10;
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.back-link:hover {
+  color: #007bff;
+}
+
+.back-arrow {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.back-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.back-text span {
+  display: block;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-top: 60px;
+  position: relative;
+}
+
+.dashboard-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+  text-transform: uppercase;
+  margin: 0;
+  text-align: center;
+}
+
+.header-actions {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 15px;
+}
+
+.edit-profile-btn, .logout-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.edit-profile-btn {
+  color: #007bff;
+}
+
+.edit-profile-btn:hover {
+  color: #0056b3;
+}
+
+.logout-btn {
+  color: #dc3545;
+}
+
+.logout-btn:hover {
+  color: #c82333;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
+/* Ліва секція - Профіль */
+.profile-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-avatar {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.profile-avatar .avatar-img {
+  width: 200px !important;
+  height: 200px !important;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+  transition: all 0.3s ease;
+}
+
+.avatar-upload {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.avatar-input {
+  display: none;
+}
+
+.avatar-upload-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.avatar-upload-btn:hover {
+  background-color: #0056b3;
+}
+
+.profile-avatar:hover .avatar-img {
+  border-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.profile-form {
+  width: 100%;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-input {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.save-btn, .cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-group label {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+.info-value {
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Права секція */
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.discount-section {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.discount-info {
+  text-align: center;
+}
+
+.discount-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 15px;
+}
+
+.discount-details {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.discount-details p {
+  margin: 5px 0;
+}
+
+/* Записи - перенесено вниз */
+.appointments-section-bottom {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+  max-width: none;
+}
+
+.appointments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.appointments-title {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.no-appointments {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.appointment-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: white;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.appointment-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.appointment-status {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-confirmed {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-in_progress {
+  background-color: #cce5ff;
+  color: #004085;
+  border: 1px solid #b3d7ff;
+}
+
+.status-completed {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.status-cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.status-cancelled_by_admin {
+  background-color: #dc3545;
+  color: white;
+  border: 1px solid #dc3545;
+}
+
+.appointment-date {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+  flex: 1;
+  text-align: right;
+}
+
+.appointment-actions-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.edit-appointment-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-appointment-btn:hover {
+  background-color: #0056b3;
+}
+
+.edit-disabled-text {
+  color: #6c757d;
+  font-size: 14px;
+  font-style: italic;
+  cursor: not-allowed;
+  padding: 8px 12px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.expand-details-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.expand-details-btn:hover {
+  background-color: #f8f9fa;
+}
+
+.expand-arrow {
+  display: inline-block;
+  font-size: 16px;
+  color: #666;
+  transition: transform 0.3s ease;
+}
+
+.expand-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.appointment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  animation: slideDown 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 100%;
+  max-width: 100%;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 300px;
+  }
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #e9ecef;
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  text-align: right;
+}
+
+.discount-applied {
+  color: #28a745;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.appointment-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  width: 100%;
+}
+
+.cancel-appointment-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-appointment-btn:hover {
+  background-color: #c82333;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+  
+  .back-navigation {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 80px;
+  }
+  
+  .dashboard-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .dashboard-title {
+    font-size: 24px;
+  }
+
+  .appointments-section-bottom {
+    margin-top: 20px;
+    padding: 15px;
+  }
+  
+  .appointment-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .appointment-actions-header {
+    align-self: flex-end;
+  }
+  
+  .appointment-date {
+    text-align: left;
+    flex: none;
+  }
+  
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .detail-label {
+    min-width: auto;
+    margin-bottom: 2px;
+  }
+  
+  .detail-value {
+    text-align: left;
+    margin-left: 0;
+  }
+} 

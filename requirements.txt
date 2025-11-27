@@ -1,0 +1,17 @@
+# Django та основні залежності
+Django==4.2.7
+djangorestframework==3.14.0
+djangorestframework-simplejwt==5.3.0
+django-cors-headers==4.3.1
+
+# База даних
+psycopg2-binary==2.9.7
+
+# Обробка зображень
+Pillow==10.0.1
+
+# Змінні середовища
+python-decouple==3.8
+
+# Додаткові утиліти
+django-filter==23.3 

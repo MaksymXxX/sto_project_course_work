@@ -1,0 +1,653 @@
+/* Стилі для фільтрів записів */
+.filters-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Група кнопок */
+.button-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.button-group .btn {
+  white-space: nowrap;
+}
+
+/* Модальне вікно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.btn-close:hover {
+  background: #f0f0f0;
+}
+
+/* Форма фільтрів */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Кнопки */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-sm {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #545b62;
+}
+
+.btn-info {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-info:hover {
+  background: #138496;
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #218838;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover {
+  background: #e0a800;
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.btn-outline-secondary:hover:not(:disabled) {
+  background: #6c757d;
+  color: white;
+}
+  
+/* Footer модального вікна */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 20px;
+}
+
+/* Деталі запису */
+.appointment-details {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row strong {
+  min-width: 120px;
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-row span {
+  color: #666;
+  font-size: 14px;
+  flex: 1;
+  margin-left: 15px;
+  word-break: break-word;
+}
+
+.discount-applied {
+  color: #28a745;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.detail-row .badge {
+  font-size: 0.8em;
+  padding: 4px 8px;
+}
+
+/* Стилі для модального вікна редагування клієнта */
+.customer-edit-modal {
+  max-width: 800px;
+  width: 90%;
+  max-height: 85vh;
+  padding: 30px;
+}
+
+.customer-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.customer-edit-form .form-group {
+  margin-bottom: 0;
+}
+
+.customer-edit-form .form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.customer-edit-form .form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #fff;
+}
+
+.customer-edit-form .form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.customer-edit-form .form-input::placeholder {
+  color: #999;
+}
+
+.password-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px 0;
+  border: 1px solid #e9ecef;
+}
+
+.password-section h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.password-hint {
+  color: #666;
+  font-size: 12px;
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
+.password-requirements {
+  color: #007bff;
+  font-size: 12px;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+}
+
+.customer-edit-modal .modal-header {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.customer-edit-modal .modal-header h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+}
+
+.customer-edit-modal .modal-footer {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #e9ecef;
+  gap: 15px;
+}
+
+.customer-edit-modal .btn {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.customer-edit-modal .btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.customer-edit-modal .btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.4);
+}
+
+.customer-edit-modal .btn-secondary {
+  background: #6c757d;
+  border: none;
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.customer-edit-modal .btn-secondary:hover {
+  background: #545b62;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.4);
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    margin: 20px auto;
+  }
+  
+  .customer-edit-modal {
+    width: 95%;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .customer-edit-form .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .customer-edit-form .form-row .form-group {
+    width: 100%;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .detail-row strong {
+    min-width: auto;
+    margin-bottom: 5px;
+  }
+  
+  .detail-row span {
+    text-align: left;
+  }
+  
+  .password-section {
+    padding: 15px;
+  }
+  
+  .customer-edit-modal .modal-header h3 {
+    font-size: 20px;
+  }
+}
+
+/* Стилі для тижневого розкладу */
+.weekly-schedule {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.schedule-day {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f8f9fa;
+}
+
+.day-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.day-header .date {
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Стилі для боксів в розкладі */
+.boxes-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.box-schedule {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.box-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.appointments-count {
+  font-size: 12px;
+  color: #6c757d;
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+.appointments-list {
+  min-height: 60px;
+}
+
+.no-appointments {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+  font-style: italic;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px dashed #dee2e6;
+}
+
+.no-appointments p {
+  margin: 0;
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.appointment-card {
+  background: #fff;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 3px solid #007bff;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-card:hover {
+  background: #f8f9fa;
+  transform: translateX(2px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.appointment-card.pending {
+  border-left-color: #ffc107;
+}
+
+.appointment-card.confirmed {
+  border-left-color: #17a2b8;
+}
+
+.appointment-card.completed {
+  border-left-color: #28a745;
+}
+
+.appointment-card.cancelled,
+.appointment-card.cancelled_by_admin {
+  border-left-color: #dc3545;
+  opacity: 0.7;
+}
+
+.appointment-time {
+  margin-bottom: 6px;
+}
+
+.appointment-time strong {
+  font-size: 14px;
+  color: #333;
+}
+
+.appointment-details {
+  margin-bottom: 8px;
+}
+
+.service-name {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+.customer-name {
+  color: #6c757d;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.price {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 13px;
+}
+
+.appointment-status {
+  text-align: right;
+}
+
+.appointment-status .badge {
+  font-size: 10px;
+  padding: 3px 6px;
+}
+
+/* Адаптивність для розкладу */
+@media (max-width: 768px) {
+  .weekly-schedule {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .schedule-day {
+    padding: 15px;
+  }
+  
+  .day-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .day-header h3 {
+    font-size: 16px;
+  }
+  
+  .box-schedule {
+    padding: 12px;
+  }
+  
+  .box-header h4 {
+    font-size: 14px;
+  }
+  
+  .appointment-card {
+    padding: 10px;
+  }
+  
+  .appointment-time strong {
+    font-size: 13px;
+  }
+  
+  .service-name {
+    font-size: 12px;
+  }
+  
+  .customer-name {
+    font-size: 11px;
+  }
+  
+  .price {
+    font-size: 12px;
+  }
+}
