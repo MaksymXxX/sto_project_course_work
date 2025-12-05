@@ -186,7 +186,7 @@ class Customer(models.Model):
         discount_percentage = self.calculate_discount_percentage()
         discount_amount = original_price * Decimal(discount_percentage) / Decimal(100)
         final_price = original_price - discount_amount
-        
+
         return final_price
 
 
@@ -208,11 +208,15 @@ class Appointment(models.Model):
         null=True,
         blank=True
     )
-    guest_name = models.CharField(max_length=100, verbose_name='Ім\'я гостя', blank=True)
-    guest_phone = models.CharField(max_length=20, verbose_name='Телефон гостя', blank=True)
-    guest_email = models.EmailField(verbose_name='Email гостя', blank=True)
+    guest_name = models.CharField(
+        max_length=100, verbose_name='Ім\'я гостя', blank=True)
+    guest_phone = models.CharField(
+        max_length=20, verbose_name='Телефон гостя', blank=True)
+    guest_email = models.EmailField(
+        verbose_name='Email гостя', blank=True)
 
-    service = models.ForeignKey(Service, on_delete=models.CASCADE, verbose_name='Послуга')
+    service = models.ForeignKey(
+        Service, on_delete=models.CASCADE, verbose_name='Послуга')
     box = models.ForeignKey(
         Box,
         on_delete=models.CASCADE,
@@ -243,8 +247,14 @@ class Appointment(models.Model):
         ordering = ['-appointment_date', '-appointment_time']
 
     def __str__(self):
-        customer_name = self.customer.user.get_full_name() if self.customer else self.guest_name
-        return f"{customer_name} - {self.service.name} ({self.appointment_date})"
+        if self.customer:
+            customer_name = self.customer.user.get_full_name()
+        else:
+            customer_name = self.guest_name
+        return (
+            f"{customer_name} - {self.service.name} "
+            f"({self.appointment_date})"
+        )
 
     def save(self, *args, **kwargs):
         if not self.total_price:
@@ -254,10 +264,14 @@ class Appointment(models.Model):
 
 class ServiceHistory(models.Model):
     """Модель історії обслуговування"""
-    appointment = models.OneToOneField(Appointment, on_delete=models.CASCADE, verbose_name='Запис')
-    completed_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата завершення')
-    mechanic_notes = models.TextField(blank=True, verbose_name='Примітки механіка')
-    actual_duration = models.IntegerField(verbose_name='Фактична тривалість (хвилини)')
+    appointment = models.OneToOneField(
+        Appointment, on_delete=models.CASCADE, verbose_name='Запис')
+    completed_at = models.DateTimeField(
+        auto_now_add=True, verbose_name='Дата завершення')
+    mechanic_notes = models.TextField(
+        blank=True, verbose_name='Примітки механіка')
+    actual_duration = models.IntegerField(
+        verbose_name='Фактична тривалість (хвилини)')
     final_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -279,7 +293,8 @@ class LoyaltyTransaction(models.Model):
         ('spent', 'Витрачено'),
     ]
 
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Клієнт')
+    customer = models.ForeignKey(
+        Customer, on_delete=models.CASCADE, verbose_name='Клієнт')
     transaction_type = models.CharField(
         max_length=10,
         choices=TRANSACTION_TYPES,
@@ -295,21 +310,32 @@ class LoyaltyTransaction(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.customer} - {self.get_transaction_type_display()} {self.points} балів"
+        transaction_type = self.get_transaction_type_display()
+        return f"{self.customer} - {transaction_type} {self.points} балів"
 
 
 class STOInfo(models.Model):
     """Модель інформації про СТО"""
     name = models.CharField(max_length=200, verbose_name='Назва СТО')
-    name_en = models.CharField(max_length=200, verbose_name='Назва СТО (англ.)', blank=True)
+    name_en = models.CharField(
+        max_length=200, verbose_name='Назва СТО (англ.)', blank=True)
     description = models.TextField(verbose_name='Опис')
-    description_en = models.TextField(blank=True, verbose_name='Опис (англ.)')
+    description_en = models.TextField(
+        blank=True, verbose_name='Опис (англ.)')
     motto = models.CharField(max_length=200, verbose_name='Девіз')
-    motto_en = models.CharField(max_length=200, verbose_name='Девіз (англ.)', blank=True)
+    motto_en = models.CharField(
+        max_length=200, verbose_name='Девіз (англ.)', blank=True)
     welcome_text = models.TextField(verbose_name='Привітальний текст')
-    welcome_text_en = models.TextField(blank=True, verbose_name='Привітальний текст (англ.)')
-    what_you_can_title = models.CharField(max_length=200, verbose_name='Заголовок розділу "Що ви можете"', default='У нас ви можете:')
-    what_you_can_title_en = models.CharField(max_length=200, verbose_name='Заголовок розділу "Що ви можете" (англ.)', blank=True)
+    welcome_text_en = models.TextField(
+        blank=True, verbose_name='Привітальний текст (англ.)')
+    what_you_can_title = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок розділу "Що ви можете"',
+        default='У нас ви можете:')
+    what_you_can_title_en = models.CharField(
+        max_length=200,
+        verbose_name='Заголовок розділу "Що ви можете" (англ.)',
+        blank=True)
     what_you_can_items = models.JSONField(
         verbose_name='Пункти "Що ви можете"',
         default=list,
@@ -324,11 +350,15 @@ class STOInfo(models.Model):
     address = models.TextField(verbose_name='Адреса')
     address_en = models.TextField(blank=True, verbose_name='Адреса (англ.)')
     phone = models.CharField(max_length=20, verbose_name='Телефон')
-    phone_en = models.CharField(max_length=20, verbose_name='Телефон (англ.)', blank=True)
+    phone_en = models.CharField(
+        max_length=20, verbose_name='Телефон (англ.)', blank=True)
     email = models.EmailField(verbose_name='Email')
-    email_en = models.EmailField(blank=True, verbose_name='Email (англ.)')
-    working_hours = models.CharField(max_length=100, verbose_name='Робочі години')
-    working_hours_en = models.CharField(max_length=100, verbose_name='Робочі години (англ.)', blank=True)
+    email_en = models.EmailField(
+        blank=True, verbose_name='Email (англ.)')
+    working_hours = models.CharField(
+        max_length=100, verbose_name='Робочі години')
+    working_hours_en = models.CharField(
+        max_length=100, verbose_name='Робочі години (англ.)', blank=True)
     is_active = models.BooleanField(default=True, verbose_name='Активна')
 
     class Meta:
@@ -374,7 +404,7 @@ class STOInfo(models.Model):
             items = self.what_you_can_items_en
         else:
             items = self.what_you_can_items
-            
+
         if isinstance(items, str):
             try:
                 return json.loads(items)
@@ -393,4 +423,4 @@ class STOInfo(models.Model):
             if isinstance(items_list, list):
                 self.what_you_can_items = items_list
             else:
-                self.what_you_can_items = [] 
+                self.what_you_can_items = []

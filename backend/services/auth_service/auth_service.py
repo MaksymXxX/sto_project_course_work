@@ -1,13 +1,14 @@
+"""Сервіс авторизації та автентифікації користувачів."""
+
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework import status
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from ...api.models import Customer
 
 
 class AuthorizationService:
     """Окремий сервіс авторизації згідно з архітектурною діаграмою"""
-    
+
     @staticmethod
     def authenticate_user(username, password):
         """Аутентифікація користувача"""
@@ -32,7 +33,7 @@ class AuthorizationService:
             'success': False,
             'error': 'Невірні облікові дані'
         }
-    
+
     @staticmethod
     def register_user(user_data):
         """Реєстрація нового користувача"""
@@ -41,56 +42,56 @@ class AuthorizationService:
             username = user_data.get('username', user_data.get('email'))
             email = user_data.get('email')
             password = user_data.get('password')
-            
+
             # Перевірка обов'язкових полів
             if not username or not email or not password:
                 return {
                     'success': False,
                     'error': 'Відсутні обов\'язкові поля'
                 }
-            
+
             # Перевірка валідності email
             if not email or '@' not in email:
                 return {
                     'success': False,
                     'error': 'Введіть коректну email адресу'
                 }
-            
+
             # Перевірка довжини пароля
             if len(password) < 6:
                 return {
                     'success': False,
                     'error': 'Пароль повинен містити мінімум 6 символів'
                 }
-            
+
             # Перевірка чи користувач вже існує за email
-            if User.objects.filter(email=email).exists():
+            if User.objects.filter(email=email).exists():  # pylint: disable=no-member
                 return {
                     'success': False,
                     'error': 'Користувач з такою email адресою вже існує'
                 }
-            
+
             # Перевірка чи користувач вже існує за username
-            if User.objects.filter(username=username).exists():
+            if User.objects.filter(username=username).exists():  # pylint: disable=no-member
                 return {
                     'success': False,
                     'error': 'Користувач з такою email адресою вже існує'
                 }
-            
+
             # Створення користувача
-            user = User.objects.create_user(
+            user = User.objects.create_user(  # pylint: disable=no-member
                 username=username,
                 email=email,
                 password=password,
                 first_name=user_data.get('first_name', ''),
                 last_name=user_data.get('last_name', '')
             )
-            
+
             # Створення профілю клієнта
-            Customer.objects.create(
+            Customer.objects.create(  # pylint: disable=no-member
                 user=user
             )
-            
+
             # Генерація токенів
             refresh = RefreshToken.for_user(user)
             return {
@@ -107,20 +108,19 @@ class AuthorizationService:
                     'is_superuser': user.is_superuser
                 }
             }
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             return {
                 'success': False,
                 'error': f'Помилка реєстрації: {str(e)}'
             }
-    
+
     @staticmethod
     def verify_token(token):
         """Перевірка JWT токена"""
         try:
-            from rest_framework_simplejwt.tokens import AccessToken
             access_token = AccessToken(token)
             user_id = access_token['user_id']
-            user = User.objects.get(id=user_id)
+            user = User.objects.get(id=user_id)  # pylint: disable=no-member
             return {
                 'success': True,
                 'user': {
@@ -133,22 +133,22 @@ class AuthorizationService:
                     'is_superuser': user.is_superuser
                 }
             }
-        except Exception as e:
+        except Exception:  # pylint: disable=broad-exception-caught
             return {
                 'success': False,
                 'error': 'Недійсний токен'
             }
-    
+
     @staticmethod
     def check_permissions(user, required_permission=None):
         """Перевірка прав доступу"""
         if not user.is_authenticated:
             return False
-        
+
         if required_permission == 'admin' and not user.is_staff:
             return False
-        
-        return True 
+
+        return True
 
     @staticmethod
     def login_user(user_data):
@@ -156,30 +156,30 @@ class AuthorizationService:
         try:
             email = user_data.get('email')
             password = user_data.get('password')
-            
+
             if not email or not password:
                 return {
                     'success': False,
                     'error': 'Введіть email та пароль'
                 }
-            
+
             # Перевірка валідності email
             if not email or '@' not in email:
                 return {
                     'success': False,
                     'error': 'Введіть коректну email адресу'
                 }
-            
+
             # Спробуємо знайти користувача за email
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(email=email)  # pylint: disable=no-member
                 username = user.username
-            except User.DoesNotExist:
+            except User.DoesNotExist:  # pylint: disable=no-member
                 return {
                     'success': False,
                     'error': 'Користувача з такою email адресою не знайдено'
                 }
-            
+
             # Аутентифікація
             user = authenticate(username=username, password=password)
             if user:
@@ -198,13 +198,12 @@ class AuthorizationService:
                         'is_superuser': user.is_superuser
                     }
                 }
-            else:
-                return {
-                    'success': False,
-                    'error': 'Невірний пароль'
-                }
-        except Exception as e:
+            return {
+                'success': False,
+                'error': 'Невірний пароль'
+            }
+        except Exception as e:  # pylint: disable=broad-exception-caught
             return {
                 'success': False,
                 'error': f'Помилка входу: {str(e)}'
-            } 
+            }

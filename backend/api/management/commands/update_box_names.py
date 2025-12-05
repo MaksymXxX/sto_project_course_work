@@ -18,23 +18,26 @@ class Command(BaseCommand):
             'дев\'ятий бокс': 'Ninth Box',
             'десятий бокс': 'Tenth Box'
         }
-        
+
         updated_count = 0
-        
-        for box in Box.objects.all():
+
+        for box in Box.objects.all():  # pylint: disable=no-member
             uk_name = box.name
             if uk_name in box_translations and not box.name_en:
                 box.name_en = box_translations[uk_name]
                 box.save()
                 self.stdout.write(
-                    self.style.SUCCESS(f"Оновлено: {uk_name} -> {box.name_en}")
+                    self.style.SUCCESS(  # pylint: disable=no-member
+                        f"Оновлено: {uk_name} -> {box.name_en}")
                 )
                 updated_count += 1
             elif box.name_en:
-                self.stdout.write(f"Вже має англійську назву: {uk_name} -> {box.name_en}")
+                self.stdout.write(
+                    f"Вже має англійську назву: {uk_name} -> {box.name_en}")
             else:
                 self.stdout.write(f"Немає перекладу для: {uk_name}")
-        
+
         self.stdout.write(
-            self.style.SUCCESS(f"\nЗагалом оновлено: {updated_count} боксів")
+            self.style.SUCCESS(  # pylint: disable=no-member
+                f"\nЗагалом оновлено: {updated_count} боксів")
         )

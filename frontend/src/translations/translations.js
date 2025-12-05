@@ -382,14 +382,14 @@ export const translations = {
         uk: 'Заблокований',
         en: 'Blocked'
     },
-         'active': {
-         uk: 'Активний',
-         en: 'Active'
-     },
-     'actions': {
-         uk: 'Дії',
-         en: 'Actions'
-     },
+    'active': {
+        uk: 'Активний',
+        en: 'Active'
+    },
+    'actions': {
+        uk: 'Дії',
+        en: 'Actions'
+    },
     'appointment_details': {
         uk: 'Деталі запису',
         en: 'Appointment Details'
@@ -790,29 +790,13 @@ export const translations = {
         uk: 'Час:',
         en: 'Time:'
     },
-    'box': {
-        uk: 'Бокс:',
-        en: 'Box:'
-    },
     'cost': {
         uk: 'Вартість:',
         en: 'Cost:'
     },
-    'notes': {
-        uk: 'Примітки:',
-        en: 'Notes:'
-    },
     'confirm_cancel_appointment': {
         uk: 'Ви впевнені, що хочете скасувати цей запис?',
         en: 'Are you sure you want to cancel this appointment?'
-    },
-    'appointment_cancelled': {
-        uk: 'Запис успішно скасовано',
-        en: 'Appointment cancelled successfully'
-    },
-    'cancel_appointment': {
-        uk: 'Скасувати запис',
-        en: 'Cancel appointment'
     },
     'cancel_appointment_error': {
         uk: 'Помилка скасування запису. Спробуйте ще раз.',
@@ -823,22 +807,6 @@ export const translations = {
     'admin_panel_title': {
         uk: 'Адміністративна панель',
         en: 'Administrative Panel'
-    },
-    'statistics': {
-        uk: 'Статистика',
-        en: 'Statistics'
-    },
-    'customers': {
-        uk: 'Клієнти',
-        en: 'Customers'
-    },
-    'appointments': {
-        uk: 'Записи',
-        en: 'Appointments'
-    },
-    'services': {
-        uk: 'Послуги',
-        en: 'Services'
     },
     'categories': {
         uk: 'Категорії',
@@ -884,10 +852,6 @@ export const translations = {
         uk: 'Активних послуг',
         en: 'Active services'
     },
-    'weekly_schedule': {
-        uk: 'Розклад на цей тиждень',
-        en: 'This week\'s schedule'
-    },
     'customer_blocked': {
         uk: 'Клієнта заблоковано',
         en: 'Customer blocked'
@@ -916,21 +880,9 @@ export const translations = {
         uk: 'Будь ласка, підтвердіть новий пароль',
         en: 'Please confirm new password'
     },
-    'passwords_dont_match': {
-        uk: 'Паролі не співпадають',
-        en: 'Passwords don\'t match'
-    },
-    'password_min_length': {
-        uk: 'Пароль повинен містити мінімум 8 символів',
-        en: 'Password must contain at least 8 characters'
-    },
     'update_customer_error': {
         uk: 'Помилка оновлення клієнта',
         en: 'Error updating customer'
-    },
-    'not_specified': {
-        uk: 'Не вказано',
-        en: 'Not specified'
     },
     'invalid_date': {
         uk: 'Некоректна дата',
@@ -948,599 +900,481 @@ export const translations = {
         uk: 'Очікує',
         en: 'Pending'
     },
-    'confirmed': {
-        uk: 'Підтверджено',
-        en: 'Confirmed'
+
+    // Розклад тижня
+    'appointments_count': {
+        uk: 'записів',
+        en: 'appointments'
     },
-    'completed': {
-        uk: 'Завершено',
-        en: 'Completed'
+    'free': {
+        uk: 'Вільний',
+        en: 'Free'
     },
-    'cancelled_by_client': {
-        uk: 'Скасовано клієнтом',
-        en: 'Cancelled by client'
+    'customer_management': {
+        uk: 'Управління клієнтами',
+        en: 'Customer Management'
     },
-         'cancelled_by_admin': {
-         uk: 'Скасовано адміністратором',
-         en: 'Cancelled by administrator'
-     },
+    'loading_appointments': {
+        uk: 'Завантаження записів...',
+        en: 'Loading appointments...'
+    },
+    'no_appointments_found': {
+        uk: 'Записів не знайдено',
+        en: 'No appointments found'
+    },
+    'date': {
+        uk: 'Дата',
+        en: 'Date'
+    },
+    'discount': {
+        uk: 'знижка',
+        en: 'discount'
+    },
+    'complete': {
+        uk: 'Завершити',
+        en: 'Complete'
+    },
+    'details': {
+        uk: 'Деталі',
+        en: 'Details'
+    },
 
-     // Розклад тижня
-     'appointments_count': {
-         uk: 'записів',
-         en: 'appointments'
-     },
-     'free': {
-         uk: 'Вільний',
-         en: 'Free'
-     },
-     'customer_management': {
-         uk: 'Управління клієнтами',
-         en: 'Customer Management'
-     },
-     'client': {
-         uk: 'Клієнт',
-         en: 'Client'
-     },
-     'blocked': {
-         uk: 'Заблокований',
-         en: 'Blocked'
-     },
-     'active': {
-         uk: 'Активний',
-         en: 'Active'
-     },
+    // Управління боксами
+    'boxes_management': {
+        uk: 'Управління боксами',
+        en: 'Boxes Management'
+    },
+    'add_box': {
+        uk: 'Додати бокс',
+        en: 'Add Box'
+    },
+    'edit_box': {
+        uk: 'Редагувати бокс',
+        en: 'Edit Box'
+    },
+    'box_name': {
+        uk: 'Назва',
+        en: 'Name'
+    },
+    'box_description': {
+        uk: 'Опис',
+        en: 'Description'
+    },
+    'box_status': {
+        uk: 'Статус',
+        en: 'Status'
+    },
+    'box_actions': {
+        uk: 'Дії',
+        en: 'Actions'
+    },
+    'box_active': {
+        uk: 'Активний',
+        en: 'Active'
+    },
+    'box_inactive': {
+        uk: 'Неактивний',
+        en: 'Inactive'
+    },
+    'box_activate': {
+        uk: 'Активувати',
+        en: 'Activate'
+    },
+    'box_deactivate': {
+        uk: 'Деактивувати',
+        en: 'Deactivate'
+    },
+    'box_working_hours': {
+        uk: 'Робочі години',
+        en: 'Working Hours'
+    },
+    'box_name_label': {
+        uk: 'Назва боксу:',
+        en: 'Box Name:'
+    },
+    'box_description_label': {
+        uk: 'Опис:',
+        en: 'Description:'
+    },
+    'box_active_label': {
+        uk: 'Активний',
+        en: 'Active'
+    },
+    'box_working_hours_label': {
+        uk: 'Робочі години:',
+        en: 'Working Hours:'
+    },
+    'box_create': {
+        uk: 'Створити',
+        en: 'Create'
+    },
+    'box_update': {
+        uk: 'Оновити',
+        en: 'Update'
+    },
+    'box_delete': {
+        uk: 'Видалити',
+        en: 'Delete'
+    },
+    'box_edit': {
+        uk: 'Редагувати',
+        en: 'Edit'
+    },
+    'box_created_success': {
+        uk: 'Бокс успішно створено',
+        en: 'Box created successfully'
+    },
+    'box_updated_success': {
+        uk: 'Бокс успішно оновлено',
+        en: 'Box updated successfully'
+    },
+    'box_deleted_success': {
+        uk: 'Бокс успішно видалено',
+        en: 'Box deleted successfully'
+    },
+    'box_create_error': {
+        uk: 'Помилка створення боксу',
+        en: 'Error creating box'
+    },
+    'box_update_error': {
+        uk: 'Помилка оновлення боксу',
+        en: 'Error updating box'
+    },
+    'box_delete_error': {
+        uk: 'Помилка видалення боксу',
+        en: 'Error deleting box'
+    },
+    'box_status_toggle_error': {
+        uk: 'Помилка зміни статусу боксу',
+        en: 'Error toggling box status'
+    },
+    'box_status_toggle_success': {
+        uk: 'Статус боксу змінено',
+        en: 'Box status toggled'
+    },
 
-     // Управління записами
-     'appointments_management': {
-         uk: 'Управління записами',
-         en: 'Appointments Management'
-     },
-     'filters': {
-         uk: 'Фільтри',
-         en: 'Filters'
-     },
-     'clear_filters': {
-         uk: 'Очистити фільтри',
-         en: 'Clear Filters'
-     },
-     'loading_appointments': {
-         uk: 'Завантаження записів...',
-         en: 'Loading appointments...'
-     },
-     'no_appointments_found': {
-         uk: 'Записів не знайдено',
-         en: 'No appointments found'
-     },
-     'client': {
-         uk: 'Клієнт',
-         en: 'Client'
-     },
-     'service': {
-         uk: 'Послуга',
-         en: 'Service'
-     },
-     'date': {
-         uk: 'Дата',
-         en: 'Date'
-     },
-     'time': {
-         uk: 'Час',
-         en: 'Time'
-     },
-     'status': {
-         uk: 'Статус',
-         en: 'Status'
-     },
-     'cost': {
-         uk: 'Вартість',
-         en: 'Cost'
-     },
-     'actions': {
-         uk: 'Дії',
-         en: 'Actions'
-     },
-     'discount': {
-         uk: 'знижка',
-         en: 'discount'
-     },
-     'confirm': {
-         uk: 'Підтвердити',
-         en: 'Confirm'
-     },
-     'complete': {
-         uk: 'Завершити',
-         en: 'Complete'
-     },
-     'cancel': {
-         uk: 'Скасувати',
-         en: 'Cancel'
-     },
-     'details': {
-         uk: 'Деталі',
-         en: 'Details'
-     },
+    // Фільтри записів
+    'appointment_filters': {
+        uk: 'Фільтри записів',
+        en: 'Appointment Filters'
+    },
+    'all_boxes': {
+        uk: 'Всі бокси',
+        en: 'All boxes'
+    },
+    'all_statuses': {
+        uk: 'Всі статуси',
+        en: 'All statuses'
+    },
+    'client_name': {
+        uk: 'Клієнт:',
+        en: 'Client:'
+    },
+    'client_name_placeholder': {
+        uk: 'Ім\'я клієнта',
+        en: 'Client name'
+    },
+    'time_from': {
+        uk: 'Час від:',
+        en: 'Time from:'
+    },
+    'time_to': {
+        uk: 'Час до:',
+        en: 'Time to:'
+    },
+    'price_from': {
+        uk: 'Ціна від',
+        en: 'Price from'
+    },
+    'price_to': {
+        uk: 'Ціна до',
+        en: 'Price to'
+    },
+    'clear_all_filters': {
+        uk: 'Очистити всі фільтри',
+        en: 'Clear All Filters'
+    },
 
-     // Управління боксами
-     'boxes_management': {
-         uk: 'Управління боксами',
-         en: 'Boxes Management'
-     },
-     'add_box': {
-         uk: 'Додати бокс',
-         en: 'Add Box'
-     },
-     'edit_box': {
-         uk: 'Редагувати бокс',
-         en: 'Edit Box'
-     },
-     'box_name': {
-         uk: 'Назва',
-         en: 'Name'
-     },
-     'box_description': {
-         uk: 'Опис',
-         en: 'Description'
-     },
-     'box_status': {
-         uk: 'Статус',
-         en: 'Status'
-     },
-     'box_actions': {
-         uk: 'Дії',
-         en: 'Actions'
-     },
-     'box_active': {
-         uk: 'Активний',
-         en: 'Active'
-     },
-     'box_inactive': {
-         uk: 'Неактивний',
-         en: 'Inactive'
-     },
-     'box_activate': {
-         uk: 'Активувати',
-         en: 'Activate'
-     },
-     'box_deactivate': {
-         uk: 'Деактивувати',
-         en: 'Deactivate'
-     },
-     'box_working_hours': {
-         uk: 'Робочі години',
-         en: 'Working Hours'
-     },
-     'box_name_label': {
-         uk: 'Назва боксу:',
-         en: 'Box Name:'
-     },
-     'box_description_label': {
-         uk: 'Опис:',
-         en: 'Description:'
-     },
-     'box_active_label': {
-         uk: 'Активний',
-         en: 'Active'
-     },
-     'box_working_hours_label': {
-         uk: 'Робочі години:',
-         en: 'Working Hours:'
-     },
-     'box_create': {
-         uk: 'Створити',
-         en: 'Create'
-     },
-     'box_update': {
-         uk: 'Оновити',
-         en: 'Update'
-     },
-     'box_delete': {
-         uk: 'Видалити',
-         en: 'Delete'
-     },
-     'box_edit': {
-         uk: 'Редагувати',
-         en: 'Edit'
-     },
-     'box_created_success': {
-         uk: 'Бокс успішно створено',
-         en: 'Box created successfully'
-     },
-     'box_updated_success': {
-         uk: 'Бокс успішно оновлено',
-         en: 'Box updated successfully'
-     },
-     'box_deleted_success': {
-         uk: 'Бокс успішно видалено',
-         en: 'Box deleted successfully'
-     },
-     'box_create_error': {
-         uk: 'Помилка створення боксу',
-         en: 'Error creating box'
-     },
-     'box_update_error': {
-         uk: 'Помилка оновлення боксу',
-         en: 'Error updating box'
-     },
-     'box_delete_error': {
-         uk: 'Помилка видалення боксу',
-         en: 'Error deleting box'
-     },
-     'box_status_toggle_error': {
-         uk: 'Помилка зміни статусу боксу',
-         en: 'Error toggling box status'
-     },
-     'box_status_toggle_success': {
-         uk: 'Статус боксу змінено',
-         en: 'Box status toggled'
-     },
+    // Деталі запису
+    'appointment_date': {
+        uk: 'Дата запису:',
+        en: 'Appointment Date:'
+    },
+    'appointment_time': {
+        uk: 'Час запису:',
+        en: 'Appointment Time:'
+    },
+    'total_cost': {
+        uk: 'Загальна вартість:',
+        en: 'Total Cost:'
+    },
+    'no_notes': {
+        uk: 'Приміток немає',
+        en: 'No notes'
+    },
+    'created_at': {
+        uk: 'Створено:',
+        en: 'Created:'
+    },
+    'updated_at': {
+        uk: 'Оновлено:',
+        en: 'Updated:'
+    },
+    'close': {
+        uk: 'Закрити',
+        en: 'Close'
+    },
 
-     // Фільтри записів
-     'appointment_filters': {
-         uk: 'Фільтри записів',
-         en: 'Appointment Filters'
-     },
-     'date_from': {
-         uk: 'Дата від:',
-         en: 'Date from:'
-     },
-     'date_to': {
-         uk: 'Дата до:',
-         en: 'Date to:'
-     },
-     'box': {
-         uk: 'Бокс:',
-         en: 'Box:'
-     },
-     'all_boxes': {
-         uk: 'Всі бокси',
-         en: 'All boxes'
-     },
-     'all_services': {
-         uk: 'Всі послуги',
-         en: 'All services'
-     },
-     'all_statuses': {
-         uk: 'Всі статуси',
-         en: 'All statuses'
-     },
-     'client_name': {
-         uk: 'Клієнт:',
-         en: 'Client:'
-     },
-     'client_name_placeholder': {
-         uk: 'Ім\'я клієнта',
-         en: 'Client name'
-     },
-     'time_from': {
-         uk: 'Час від:',
-         en: 'Time from:'
-     },
-     'time_to': {
-         uk: 'Час до:',
-         en: 'Time to:'
-     },
-     'price_from': {
-         uk: 'Ціна від',
-         en: 'Price from'
-     },
-     'price_to': {
-         uk: 'Ціна до',
-         en: 'Price to'
-     },
-     'apply_filters': {
-         uk: 'Застосувати фільтри',
-         en: 'Apply Filters'
-     },
-     'clear_all_filters': {
-         uk: 'Очистити всі фільтри',
-         en: 'Clear All Filters'
-     },
+    // Повідомлення для адмін панелі
+    'appointment_confirmed': {
+        uk: 'Запис підтверджено',
+        en: 'Appointment confirmed'
+    },
+    'confirm_appointment_error': {
+        uk: 'Помилка підтвердження запису',
+        en: 'Error confirming appointment'
+    },
+    'service_completed': {
+        uk: 'Обслуговування завершено',
+        en: 'Service completed'
+    },
+    'complete_service_error': {
+        uk: 'Помилка завершення обслуговування',
+        en: 'Error completing service'
+    },
+    'appointment_cancelled_admin': {
+        uk: 'Запис скасовано адміністратором',
+        en: 'Appointment cancelled by administrator'
+    },
+    'load_appointment_details_error': {
+        uk: 'Помилка завантаження деталей запису',
+        en: 'Error loading appointment details'
+    },
+    'load_appointments_error': {
+        uk: 'Помилка завантаження записів',
+        en: 'Error loading appointments'
+    },
+    'load_schedule_error': {
+        uk: 'Помилка завантаження розкладу',
+        en: 'Error loading schedule'
+    },
 
-     // Деталі запису
-     'appointment_details': {
-         uk: 'Деталі запису',
-         en: 'Appointment Details'
-     },
-     'phone': {
-         uk: 'Телефон:',
-         en: 'Phone:'
-     },
-     'email': {
-         uk: 'Email:',
-         en: 'Email:'
-     },
-     'box_name': {
-         uk: 'Бокс:',
-         en: 'Box:'
-     },
-     'appointment_date': {
-         uk: 'Дата запису:',
-         en: 'Appointment Date:'
-     },
-     'appointment_time': {
-         uk: 'Час запису:',
-         en: 'Appointment Time:'
-     },
-     'total_cost': {
-         uk: 'Загальна вартість:',
-         en: 'Total Cost:'
-     },
-     'notes': {
-         uk: 'Примітки:',
-         en: 'Notes:'
-     },
-     'no_notes': {
-         uk: 'Приміток немає',
-         en: 'No notes'
-     },
-     'created_at': {
-         uk: 'Створено:',
-         en: 'Created:'
-     },
-     'updated_at': {
-         uk: 'Оновлено:',
-         en: 'Updated:'
-     },
-     'close': {
-         uk: 'Закрити',
-         en: 'Close'
-     },
+    // Управління категоріями
+    'categories_management': {
+        uk: 'Управління категоріями',
+        en: 'Categories Management'
+    },
+    'add_category': {
+        uk: 'Додати категорію',
+        en: 'Add Category'
+    },
+    'edit_category': {
+        uk: 'Редагувати категорію',
+        en: 'Edit Category'
+    },
+    'category_name': {
+        uk: 'Назва',
+        en: 'Name'
+    },
+    'category_description': {
+        uk: 'Опис',
+        en: 'Description'
+    },
+    'category_order': {
+        uk: 'Порядок',
+        en: 'Order'
+    },
+    'category_actions': {
+        uk: 'Дії',
+        en: 'Actions'
+    },
+    'category_name_label': {
+        uk: 'Назва категорії:',
+        en: 'Category Name:'
+    },
+    'category_description_label': {
+        uk: 'Опис:',
+        en: 'Description:'
+    },
+    'category_order_label': {
+        uk: 'Порядок відображення:',
+        en: 'Display Order:'
+    },
+    'category_create': {
+        uk: 'Створити',
+        en: 'Create'
+    },
+    'category_update': {
+        uk: 'Оновити',
+        en: 'Update'
+    },
+    'category_delete': {
+        uk: 'Видалити',
+        en: 'Delete'
+    },
+    'category_edit': {
+        uk: 'Редагувати',
+        en: 'Edit'
+    },
+    'category_created_success': {
+        uk: 'Категорію успішно створено',
+        en: 'Category created successfully'
+    },
+    'category_updated_success': {
+        uk: 'Категорію успішно оновлено',
+        en: 'Category updated successfully'
+    },
+    'category_deleted_success': {
+        uk: 'Категорію успішно видалено',
+        en: 'Category deleted successfully'
+    },
+    'category_create_error': {
+        uk: 'Помилка створення категорії',
+        en: 'Error creating category'
+    },
+    'category_update_error': {
+        uk: 'Помилка оновлення категорії',
+        en: 'Error updating category'
+    },
+    'category_delete_error': {
+        uk: 'Помилка видалення категорії',
+        en: 'Error deleting category'
+    },
 
-     // Повідомлення для адмін панелі
-     'appointment_confirmed': {
-         uk: 'Запис підтверджено',
-         en: 'Appointment confirmed'
-     },
-     'confirm_appointment_error': {
-         uk: 'Помилка підтвердження запису',
-         en: 'Error confirming appointment'
-     },
-     'service_completed': {
-         uk: 'Обслуговування завершено',
-         en: 'Service completed'
-     },
-     'complete_service_error': {
-         uk: 'Помилка завершення обслуговування',
-         en: 'Error completing service'
-     },
-     'appointment_cancelled_admin': {
-         uk: 'Запис скасовано адміністратором',
-         en: 'Appointment cancelled by administrator'
-     },
-     'cancel_appointment_error': {
-         uk: 'Помилка скасування запису',
-         en: 'Error cancelling appointment'
-     },
-     'load_appointment_details_error': {
-         uk: 'Помилка завантаження деталей запису',
-         en: 'Error loading appointment details'
-     },
-     'load_appointments_error': {
-         uk: 'Помилка завантаження записів',
-         en: 'Error loading appointments'
-     },
-     'load_schedule_error': {
-         uk: 'Помилка завантаження розкладу',
-         en: 'Error loading schedule'
-     },
-
-     // Управління категоріями
-     'categories_management': {
-         uk: 'Управління категоріями',
-         en: 'Categories Management'
-     },
-     'add_category': {
-         uk: 'Додати категорію',
-         en: 'Add Category'
-     },
-     'edit_category': {
-         uk: 'Редагувати категорію',
-         en: 'Edit Category'
-     },
-     'category_name': {
-         uk: 'Назва',
-         en: 'Name'
-     },
-     'category_description': {
-         uk: 'Опис',
-         en: 'Description'
-     },
-     'category_order': {
-         uk: 'Порядок',
-         en: 'Order'
-     },
-     'category_actions': {
-         uk: 'Дії',
-         en: 'Actions'
-     },
-     'category_name_label': {
-         uk: 'Назва категорії:',
-         en: 'Category Name:'
-     },
-     'category_description_label': {
-         uk: 'Опис:',
-         en: 'Description:'
-     },
-     'category_order_label': {
-         uk: 'Порядок відображення:',
-         en: 'Display Order:'
-     },
-     'category_create': {
-         uk: 'Створити',
-         en: 'Create'
-     },
-     'category_update': {
-         uk: 'Оновити',
-         en: 'Update'
-     },
-     'category_delete': {
-         uk: 'Видалити',
-         en: 'Delete'
-     },
-     'category_edit': {
-         uk: 'Редагувати',
-         en: 'Edit'
-     },
-     'category_created_success': {
-         uk: 'Категорію успішно створено',
-         en: 'Category created successfully'
-     },
-     'category_updated_success': {
-         uk: 'Категорію успішно оновлено',
-         en: 'Category updated successfully'
-     },
-     'category_deleted_success': {
-         uk: 'Категорію успішно видалено',
-         en: 'Category deleted successfully'
-     },
-     'category_create_error': {
-         uk: 'Помилка створення категорії',
-         en: 'Error creating category'
-     },
-     'category_update_error': {
-         uk: 'Помилка оновлення категорії',
-         en: 'Error updating category'
-     },
-     'category_delete_error': {
-         uk: 'Помилка видалення категорії',
-         en: 'Error deleting category'
-     },
-
-     // Управління послугами
-     'services_management': {
-         uk: 'Управління послугами',
-         en: 'Services Management'
-     },
-     'add_service': {
-         uk: 'Додати послугу',
-         en: 'Add Service'
-     },
-     'edit_service': {
-         uk: 'Редагувати послугу',
-         en: 'Edit Service'
-     },
-     'service_name': {
-         uk: 'Назва',
-         en: 'Name'
-     },
-     'service_description': {
-         uk: 'Опис',
-         en: 'Description'
-     },
-     'service_category': {
-         uk: 'Категорія',
-         en: 'Category'
-     },
-     'service_price': {
-         uk: 'Ціна',
-         en: 'Price'
-     },
-     'service_duration': {
-         uk: 'Тривалість',
-         en: 'Duration'
-     },
-     'service_status': {
-         uk: 'Статус',
-         en: 'Status'
-     },
-     'service_actions': {
-         uk: 'Дії',
-         en: 'Actions'
-     },
-     'service_active': {
-         uk: 'Активна',
-         en: 'Active'
-     },
-     'service_inactive': {
-         uk: 'Неактивна',
-         en: 'Inactive'
-     },
-     'service_activate': {
-         uk: 'Активувати',
-         en: 'Activate'
-     },
-     'service_deactivate': {
-         uk: 'Деактивувати',
-         en: 'Deactivate'
-     },
-     'service_featured': {
-         uk: 'Рекомендована',
-         en: 'Featured'
-     },
-     'service_name_label': {
-         uk: 'Назва послуги:',
-         en: 'Service Name:'
-     },
-     'service_description_label': {
-         uk: 'Опис:',
-         en: 'Description:'
-     },
-     'service_category_label': {
-         uk: 'Категорія:',
-         en: 'Category:'
-     },
-     'service_price_label': {
-         uk: 'Ціна:',
-         en: 'Price:'
-     },
-     'service_duration_label': {
-         uk: 'Тривалість (хвилини):',
-         en: 'Duration (minutes):'
-     },
-     'service_active_label': {
-         uk: 'Активна',
-         en: 'Active'
-     },
-     'service_featured_label': {
-         uk: 'Рекомендована',
-         en: 'Featured'
-     },
-     'service_create': {
-         uk: 'Створити',
-         en: 'Create'
-     },
-     'service_update': {
-         uk: 'Оновити',
-         en: 'Update'
-     },
-     'service_delete': {
-         uk: 'Видалити',
-         en: 'Delete'
-     },
-     'service_edit': {
-         uk: 'Редагувати',
-         en: 'Edit'
-     },
-     'service_created_success': {
-         uk: 'Послугу успішно створено',
-         en: 'Service created successfully'
-     },
-     'service_updated_success': {
-         uk: 'Послугу успішно оновлено',
-         en: 'Service updated successfully'
-     },
-     'service_deleted_success': {
-         uk: 'Послугу успішно видалено',
-         en: 'Service deleted successfully'
-     },
-     'service_create_error': {
-         uk: 'Помилка створення послуги',
-         en: 'Error creating service'
-     },
-     'service_update_error': {
-         uk: 'Помилка оновлення послуги',
-         en: 'Error updating service'
-     },
-     'service_delete_error': {
-         uk: 'Помилка видалення послуги',
-         en: 'Error deleting service'
-     },
-     'service_status_toggle_error': {
-         uk: 'Помилка зміни статусу послуги',
-         en: 'Error toggling service status'
-     },
-         'service_status_toggle_success': {
+    // Управління послугами
+    'services_management': {
+        uk: 'Управління послугами',
+        en: 'Services Management'
+    },
+    'add_service': {
+        uk: 'Додати послугу',
+        en: 'Add Service'
+    },
+    'edit_service': {
+        uk: 'Редагувати послугу',
+        en: 'Edit Service'
+    },
+    'service_name': {
+        uk: 'Назва',
+        en: 'Name'
+    },
+    'service_description': {
+        uk: 'Опис',
+        en: 'Description'
+    },
+    'service_category': {
+        uk: 'Категорія',
+        en: 'Category'
+    },
+    'service_price': {
+        uk: 'Ціна',
+        en: 'Price'
+    },
+    'service_duration': {
+        uk: 'Тривалість',
+        en: 'Duration'
+    },
+    'service_status': {
+        uk: 'Статус',
+        en: 'Status'
+    },
+    'service_actions': {
+        uk: 'Дії',
+        en: 'Actions'
+    },
+    'service_active': {
+        uk: 'Активна',
+        en: 'Active'
+    },
+    'service_inactive': {
+        uk: 'Неактивна',
+        en: 'Inactive'
+    },
+    'service_activate': {
+        uk: 'Активувати',
+        en: 'Activate'
+    },
+    'service_deactivate': {
+        uk: 'Деактивувати',
+        en: 'Deactivate'
+    },
+    'service_featured': {
+        uk: 'Рекомендована',
+        en: 'Featured'
+    },
+    'service_name_label': {
+        uk: 'Назва послуги:',
+        en: 'Service Name:'
+    },
+    'service_description_label': {
+        uk: 'Опис:',
+        en: 'Description:'
+    },
+    'service_category_label': {
+        uk: 'Категорія:',
+        en: 'Category:'
+    },
+    'service_price_label': {
+        uk: 'Ціна:',
+        en: 'Price:'
+    },
+    'service_duration_label': {
+        uk: 'Тривалість (хвилини):',
+        en: 'Duration (minutes):'
+    },
+    'service_active_label': {
+        uk: 'Активна',
+        en: 'Active'
+    },
+    'service_featured_label': {
+        uk: 'Рекомендована',
+        en: 'Featured'
+    },
+    'service_create': {
+        uk: 'Створити',
+        en: 'Create'
+    },
+    'service_update': {
+        uk: 'Оновити',
+        en: 'Update'
+    },
+    'service_delete': {
+        uk: 'Видалити',
+        en: 'Delete'
+    },
+    'service_edit': {
+        uk: 'Редагувати',
+        en: 'Edit'
+    },
+    'service_created_success': {
+        uk: 'Послугу успішно створено',
+        en: 'Service created successfully'
+    },
+    'service_updated_success': {
+        uk: 'Послугу успішно оновлено',
+        en: 'Service updated successfully'
+    },
+    'service_deleted_success': {
+        uk: 'Послугу успішно видалено',
+        en: 'Service deleted successfully'
+    },
+    'service_create_error': {
+        uk: 'Помилка створення послуги',
+        en: 'Error creating service'
+    },
+    'service_update_error': {
+        uk: 'Помилка оновлення послуги',
+        en: 'Error updating service'
+    },
+    'service_delete_error': {
+        uk: 'Помилка видалення послуги',
+        en: 'Error deleting service'
+    },
+    'service_status_toggle_error': {
+        uk: 'Помилка зміни статусу послуги',
+        en: 'Error toggling service status'
+    },
+    'service_status_toggle_success': {
         uk: 'Статус послуги змінено',
         en: 'Service status toggled'
     },
@@ -1578,4 +1412,4 @@ export const translations = {
         uk: 'Сб',
         en: 'Sat'
     }
- };
+};

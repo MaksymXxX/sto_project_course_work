@@ -21,7 +21,6 @@ const CustomerAppointment = () => {
   const [services, setServices] = useState([]);
   const [availableTimes, setAvailableTimes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [editAppointmentId, setEditAppointmentId] = useState(null);
   const [discount, setDiscount] = useState(0);
@@ -34,20 +33,19 @@ const CustomerAppointment = () => {
         // Спочатку завантажуємо послуги з урахуванням мови
         const servicesResponse = await api.get(`/api/services/?language=${language}`);
         setServices(servicesResponse.data);
-        
+
         // Перевіряємо чи це режим редагування
         if (location.state?.editMode && location.state?.appointmentData) {
           const appointmentData = location.state.appointmentData;
-          
+
           // Спочатку встановлюємо режим редагування
           setEditMode(true);
           setEditAppointmentId(appointmentData.id);
-          
+
           // Завантажуємо профіль для розрахунку знижки
           try {
             const profileResponse = await api.get('/api/customers/profile/');
-            setUserProfile(profileResponse.data);
-            
+
             // Розраховуємо знижку після завантаження профілю
             const completedAppointments = profileResponse.data.completed_appointments_count || 0;
             const discountPercentage = Math.min(completedAppointments * 0.5, 10);
@@ -55,7 +53,7 @@ const CustomerAppointment = () => {
           } catch (profileError) {
             console.error('Помилка завантаження профілю:', profileError);
           }
-          
+
           // Заповнюємо форму даними існуючого запису
           const editFormData = {
             service: appointmentData.service?.id?.toString() || '',
@@ -66,10 +64,10 @@ const CustomerAppointment = () => {
             guest_email: appointmentData.guest_email || '',
             notes: appointmentData.notes || ''
           };
-          
+
           // Встановлюємо форму
           setFormData(editFormData);
-          
+
           // Завантажуємо доступні часи для цієї дати та послуги
           if (appointmentData.service?.id && appointmentData.appointment_date) {
             // Використовуємо setTimeout щоб дати час React оновити стан
@@ -82,25 +80,24 @@ const CustomerAppointment = () => {
           // Потім завантажуємо профіль для нового запису
           try {
             const profileResponse = await api.get('/api/customers/profile/');
-            setUserProfile(profileResponse.data);
-            
+
             // Розраховуємо знижку після завантаження профілю
             const completedAppointments = profileResponse.data.completed_appointments_count || 0;
             const discountPercentage = Math.min(completedAppointments * 0.5, 10);
             setDiscount(discountPercentage);
-            
+
             // Заповнюємо форму даними користувача
             if (profileResponse.data && profileResponse.data.user) {
               const userData = profileResponse.data.user;
               const customerData = profileResponse.data;
-              
+
               const newFormData = {
                 ...formData,
                 guest_name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim(),
                 guest_email: userData.email || '',
                 guest_phone: customerData.phone || ''
               };
-              
+
               setFormData(newFormData);
             }
           } catch (profileError) {
@@ -113,18 +110,7 @@ const CustomerAppointment = () => {
     };
 
     fetchData();
-  }, [location.state, language]);
-
-  // Функція для розрахунку знижки
-  const calculateDiscount = () => {
-    if (!userProfile) return 0;
-    
-    // Отримуємо кількість завершених записів з профілю
-    const completedAppointments = userProfile.completed_appointments_count || 0;
-    const discountPercentage = Math.min(completedAppointments * 0.5, 10); // 0.5% за кожне відвідування, максимум 10%
-    
-    return discountPercentage;
-  };
+  }, [location.state, language]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // useEffect для обробки зміни послуги
   useEffect(() => {
@@ -134,34 +120,24 @@ const CustomerAppointment = () => {
     }
   }, [formData.service]);
 
-  const fetchServices = async () => {
-    try {
-      const response = await api.get(`/api/services/?language=${language}`);
-      setServices(response.data);
-    } catch (error) {
-      console.error('Помилка отримання послуг:', error);
-      toast.error(t('error_loading_services', { uk: 'Помилка отримання послуг', en: 'Error loading services' }));
-    }
-  };
-
   const fetchAvailableTimes = async (date, serviceId, previousTime = null) => {
     try {
       let url = `/api/boxes/available_times/?date=${date}&service_id=${serviceId}`;
-      
+
       // Якщо ми в режимі редагування, додаємо ID запису для виключення
       if (editMode && editAppointmentId) {
         url += `&exclude_appointment_id=${editAppointmentId}`;
       }
-      
+
       const response = await api.get(url);
       const times = response.data.available_times || [];
-      
+
       // Якщо у нас є попередньо обраний час, додаємо його до списку доступних часів
       if (previousTime && !times.includes(previousTime)) {
         times.push(previousTime);
         times.sort(); // Сортуємо часи
       }
-      
+
       setAvailableTimes(times);
     } catch (error) {
       console.error('Помилка отримання доступних часів:', error);
@@ -194,28 +170,6 @@ const CustomerAppointment = () => {
     }
   };
 
-  const checkDateAvailability = async (date) => {
-    try {
-      const response = await api.get(`/api/boxes/available_dates/?service_id=${formData.service}`);
-      const availableDates = response.data.available_dates || [];
-      return availableDates.includes(date);
-    } catch (error) {
-      console.error('Помилка перевірки доступності дати:', error);
-      return false;
-    }
-  };
-
-  const checkTimeAvailability = async (date, time) => {
-    try {
-      const response = await api.get(`/api/boxes/available_times/?date=${date}&service_id=${formData.service}`);
-      const availableTimes = response.data.available_times || [];
-      return availableTimes.includes(time);
-    } catch (error) {
-      console.error('Помилка перевірки доступності часу:', error);
-      return false;
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -227,10 +181,10 @@ const CustomerAppointment = () => {
         const appointmentDate = new Date(formData.appointment_date);
         const appointmentTime = formData.appointment_time.split(':');
         appointmentDate.setHours(parseInt(appointmentTime[0]), parseInt(appointmentTime[1]), 0, 0);
-        
+
         const timeDifference = appointmentDate.getTime() - now.getTime();
         const hoursDifference = timeDifference / (1000 * 60 * 60);
-        
+
         if (hoursDifference < 2) {
           toast.error('Не можна редагувати запис менше ніж за 2 години до його початку. Зверніться до адміністратора для внесення змін.');
           setLoading(false);
@@ -256,19 +210,19 @@ const CustomerAppointment = () => {
       } else {
         // Створення нового запису
         response = await api.post(`/api/appointments/?language=${language}`, appointmentData);
-        
+
         // Показуємо інформацію про призначений бокс
         if (response.data.box) {
           const boxName = response.data.box.name;
-          toast.success(t('appointment_created_with_box', { 
-            uk: `Запис успішно створено! Призначено бокс: ${boxName}`, 
-            en: `Appointment successfully created! Assigned box: ${boxName}` 
+          toast.success(t('appointment_created_with_box', {
+            uk: `Запис успішно створено! Призначено бокс: ${boxName}`,
+            en: `Appointment successfully created! Assigned box: ${boxName}`
           }));
         } else {
           toast.success(t('appointment_created', translations.appointment_created));
         }
       }
-      
+
       navigate('/dashboard');
     } catch (error) {
       console.error('Помилка створення/оновлення запису:', error);
@@ -291,7 +245,7 @@ const CustomerAppointment = () => {
           {editMode ? t('edit_appointment', { uk: 'Редагування запису', en: 'Edit appointment' }) : t('book_appointment', translations.book_appointment)}
         </h2>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="guest_name">{t('first_name', translations.first_name)}:</label>
@@ -305,7 +259,7 @@ const CustomerAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="guest_phone">{t('phone', translations.phone)}:</label>
           <input
@@ -318,7 +272,7 @@ const CustomerAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="guest_email">{t('email', translations.email)}:</label>
           <input
@@ -331,7 +285,7 @@ const CustomerAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="service">{t('select_service', translations.select_service)} *</label>
           <select
@@ -350,7 +304,7 @@ const CustomerAppointment = () => {
             ))}
           </select>
         </div>
-        
+
         {/* Відображення знижки та фінальної ціни */}
         {formData.service && discount > 0 && (
           <div className="discount-info">
@@ -375,7 +329,7 @@ const CustomerAppointment = () => {
             </div>
           </div>
         )}
-        
+
         {formData.service && (
           <div className="form-group">
             <label>{t('select_date', translations.select_date)} *</label>
@@ -391,7 +345,7 @@ const CustomerAppointment = () => {
             />
           </div>
         )}
-        
+
         {formData.appointment_date && formData.service && (
           <div className="form-group">
             <label htmlFor="appointment_time">{t('select_time', translations.select_time)} *</label>
@@ -415,7 +369,7 @@ const CustomerAppointment = () => {
             </select>
           </div>
         )}
-        
+
         <div className="form-group">
           <label htmlFor="notes">{t('notes', translations.notes)}:</label>
           <textarea
@@ -427,17 +381,17 @@ const CustomerAppointment = () => {
             rows="3"
           />
         </div>
-        
+
         <div className="form-actions">
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
+          <button
+            type="submit"
+            className="btn btn-primary"
             disabled={loading}
           >
             {loading ? t('loading', translations.loading) : (editMode ? t('update_appointment', { uk: 'Оновити запис', en: 'Update appointment' }) : t('create_appointment', { uk: 'Створити запис', en: 'Create appointment' }))}
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="btn btn-secondary"
             onClick={() => navigate('/dashboard')}
           >

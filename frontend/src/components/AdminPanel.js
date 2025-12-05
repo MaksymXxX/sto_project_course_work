@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -17,7 +16,7 @@ const AdminPanel = () => {
   const [stoInfo, setStoInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('statistics');
-  
+
   // Фільтри для записів
   const [appointmentFilters, setAppointmentFilters] = useState({
     date_from: '',
@@ -31,9 +30,9 @@ const AdminPanel = () => {
     price_min: '',
     price_max: ''
   });
-  
+
   const [showAppointmentFilters, setShowAppointmentFilters] = useState(false);
-  
+
   // Стани для форм
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
@@ -45,11 +44,11 @@ const AdminPanel = () => {
   const [editingService, setEditingService] = useState(null);
   const [editingCategory, setEditingCategory] = useState(null);
   const [editingBox, setEditingBox] = useState(null);
-  
+
   // Стани для деталей запису
   const [showAppointmentDetails, setShowAppointmentDetails] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
-  
+
   // Стани для редагування клієнта
   const [showCustomerEditForm, setShowCustomerEditForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
@@ -60,7 +59,7 @@ const AdminPanel = () => {
     password: '',
     password_confirm: ''
   });
-  
+
   // Форми
   const [serviceForm, setServiceForm] = useState({
     name: '',
@@ -72,7 +71,7 @@ const AdminPanel = () => {
     category_id: '',
     is_active: true
   });
-  
+
   const [categoryForm, setCategoryForm] = useState({
     name: '',
     name_en: '',
@@ -80,7 +79,7 @@ const AdminPanel = () => {
     description_en: '',
     order: ''
   });
-  
+
   const [boxForm, setBoxForm] = useState({
     name: '',
     name_en: '',
@@ -97,7 +96,7 @@ const AdminPanel = () => {
       sunday: { start: '00:00', end: '00:00' }
     }
   });
-  
+
   const [stoInfoForm, setStoInfoForm] = useState({
     name: '',
     description: '',
@@ -125,54 +124,34 @@ const AdminPanel = () => {
   });
 
   // Debounce для фільтрів записів
-  const debouncedFetchAppointments = useCallback(
-    (() => {
-      let timeoutId;
-      return () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          const params = new URLSearchParams();
-          if (appointmentFilters.date_from) params.append('date_from', appointmentFilters.date_from);
-          if (appointmentFilters.date_to) params.append('date_to', appointmentFilters.date_to);
-          if (appointmentFilters.box_id) params.append('box_id', appointmentFilters.box_id);
-          if (appointmentFilters.service_id) params.append('service_id', appointmentFilters.service_id);
-          if (appointmentFilters.status) params.append('status', appointmentFilters.status);
-          if (appointmentFilters.customer_name) params.append('customer_name', appointmentFilters.customer_name);
-          if (appointmentFilters.time_from) params.append('time_from', appointmentFilters.time_from);
-          if (appointmentFilters.time_to) params.append('time_to', appointmentFilters.time_to);
-          if (appointmentFilters.price_min) params.append('price_min', appointmentFilters.price_min);
-          if (appointmentFilters.price_max) params.append('price_max', appointmentFilters.price_max);
-          
-          api.get(`/api/admin/appointments/?${params.toString()}&language=${language}`)
-            .then(response => {
-              setAppointments(response.data || []);
-            })
-            .catch(error => {
-              console.error('Помилка завантаження записів:', error);
-              toast.error(t('load_appointments_error'));
-            });
-        }, 300);
-      };
-    })(),
-    [appointmentFilters, language]
-  );
-
   useEffect(() => {
-    if (activeTab === 'appointments') {
-      debouncedFetchAppointments();
-    }
-  }, [appointmentFilters, activeTab, debouncedFetchAppointments, language]);
+    if (activeTab !== 'appointments') return;
 
-  // Додатковий useEffect для негайного оновлення при очищенні фільтрів
-  useEffect(() => {
-    if (activeTab === 'appointments') {
-      // Перевіряємо чи всі фільтри порожні (очищені)
-      const allFiltersEmpty = Object.values(appointmentFilters).every(value => value === '');
-      if (allFiltersEmpty) {
-        debouncedFetchAppointments();
-      }
-    }
-  }, [appointmentFilters, activeTab, language, debouncedFetchAppointments]);
+    const timeoutId = setTimeout(() => {
+      const params = new URLSearchParams();
+      if (appointmentFilters.date_from) params.append('date_from', appointmentFilters.date_from);
+      if (appointmentFilters.date_to) params.append('date_to', appointmentFilters.date_to);
+      if (appointmentFilters.box_id) params.append('box_id', appointmentFilters.box_id);
+      if (appointmentFilters.service_id) params.append('service_id', appointmentFilters.service_id);
+      if (appointmentFilters.status) params.append('status', appointmentFilters.status);
+      if (appointmentFilters.customer_name) params.append('customer_name', appointmentFilters.customer_name);
+      if (appointmentFilters.time_from) params.append('time_from', appointmentFilters.time_from);
+      if (appointmentFilters.time_to) params.append('time_to', appointmentFilters.time_to);
+      if (appointmentFilters.price_min) params.append('price_min', appointmentFilters.price_min);
+      if (appointmentFilters.price_max) params.append('price_max', appointmentFilters.price_max);
+
+      api.get(`/api/admin/appointments/?${params.toString()}&language=${language}`)
+        .then(response => {
+          setAppointments(response.data || []);
+        })
+        .catch(error => {
+          console.error('Помилка завантаження записів:', error);
+          toast.error(t('load_appointments_error'));
+        });
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [appointmentFilters, language, activeTab, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchWeeklySchedule = useCallback(async () => {
     try {
@@ -182,7 +161,7 @@ const AdminPanel = () => {
       console.error('Помилка завантаження розкладу:', error);
       toast.error(t('load_schedule_error'));
     }
-  }, [language]);
+  }, [language, t]);
 
   const handleAppointmentFilterChange = (name, value) => {
     setAppointmentFilters(prev => ({
@@ -279,12 +258,12 @@ const AdminPanel = () => {
 
   const getDayName = (dayName) => {
     // Якщо назва дня вже переведена (приходить з бекенду), повертаємо як є
-    if (dayName === t('monday') || dayName === t('tuesday') || dayName === t('wednesday') || 
-        dayName === t('thursday') || dayName === t('friday') || dayName === t('saturday') || 
-        dayName === t('sunday')) {
+    if (dayName === t('monday') || dayName === t('tuesday') || dayName === t('wednesday') ||
+      dayName === t('thursday') || dayName === t('friday') || dayName === t('saturday') ||
+      dayName === t('sunday')) {
       return dayName;
     }
-    
+
     // Інакше переводимо з української або англійської
     const dayMap = {
       'Понеділок': t('monday'),
@@ -308,15 +287,15 @@ const AdminPanel = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-                          const [statsResponse, customersResponse, servicesResponse, categoriesResponse, boxesResponse, stoInfoResponse] = await Promise.all([
-                    api.get('/api/admin/statistics/'),
-                    api.get(`/api/admin/customer_management/?language=${language}`),
-                    api.get(`/api/admin/services_management/?language=${language}`),
-                    api.get(`/api/admin/categories_management/?language=${language}`),
-                    api.get(`/api/admin/boxes_management/?language=${language}`),
-                    api.get(`/api/admin/home_page_management/?language=${language}`)
-                  ]);
-        
+        const [statsResponse, customersResponse, servicesResponse, categoriesResponse, boxesResponse, stoInfoResponse] = await Promise.all([
+          api.get('/api/admin/statistics/'),
+          api.get(`/api/admin/customer_management/?language=${language}`),
+          api.get(`/api/admin/services_management/?language=${language}`),
+          api.get(`/api/admin/categories_management/?language=${language}`),
+          api.get(`/api/admin/boxes_management/?language=${language}`),
+          api.get(`/api/admin/home_page_management/?language=${language}`)
+        ]);
+
 
         setStatistics(statsResponse.data);
         setCustomers(customersResponse.data);
@@ -324,7 +303,7 @@ const AdminPanel = () => {
         setCategories(categoriesResponse.data);
         setBoxes(boxesResponse.data);
         setStoInfo(stoInfoResponse.data);
-        
+
         // Завантажуємо розклад тижня
         fetchWeeklySchedule();
       } catch (error) {
@@ -380,7 +359,7 @@ const AdminPanel = () => {
 
   const handleUpdateCustomer = async (e) => {
     e.preventDefault();
-    
+
     // Валідація пароля
     if (customerEditForm.password || customerEditForm.password_confirm) {
       if (!customerEditForm.password) {
@@ -406,7 +385,7 @@ const AdminPanel = () => {
       formData.append('first_name', customerEditForm.first_name);
       formData.append('last_name', customerEditForm.last_name);
       formData.append('email', customerEditForm.email);
-      
+
       if (customerEditForm.password) {
         formData.append('password', customerEditForm.password);
       }
@@ -420,7 +399,7 @@ const AdminPanel = () => {
       // Оновлюємо список клієнтів
       const response = await api.get(`/api/admin/customer_management/?language=${language}`);
       setCustomers(response.data);
-      
+
       setShowCustomerEditForm(false);
       setEditingCustomer(null);
       setCustomerEditForm({
@@ -430,7 +409,7 @@ const AdminPanel = () => {
         password: '',
         password_confirm: ''
       });
-      
+
       toast.success(t('customer_data_updated'));
     } catch (error) {
       console.error('Помилка оновлення клієнта:', error);
@@ -446,7 +425,7 @@ const AdminPanel = () => {
     try {
       await api.post(`/api/appointments/${appointmentId}/confirm/`);
       toast.success(t('appointment_confirmed'));
-      debouncedFetchAppointments();
+      // Оновлення відбудеться автоматично через useEffect
     } catch (error) {
       toast.error(t('confirm_appointment_error'));
     }
@@ -456,7 +435,7 @@ const AdminPanel = () => {
     try {
       await api.post(`/api/appointments/${appointmentId}/complete/`);
       toast.success(t('service_completed'));
-      debouncedFetchAppointments();
+      // Оновлення відбудеться автоматично через useEffect
     } catch (error) {
       toast.error(t('complete_service_error'));
     }
@@ -466,7 +445,7 @@ const AdminPanel = () => {
     try {
       await api.post(`/api/admin/${appointmentId}/cancel_appointment/`);
       toast.success(t('appointment_cancelled_admin'));
-      debouncedFetchAppointments(); // Оновлюємо список з урахуванням фільтрів
+      // Оновлення відбудеться автоматично через useEffect
     } catch (error) {
       toast.error(t('cancel_appointment_error'));
     }
@@ -560,7 +539,7 @@ const AdminPanel = () => {
       // Отримуємо повні дані послуги для редагування
       const response = await api.get(`/api/admin/${service.id}/get_service_for_edit/`);
       const serviceData = response.data;
-      
+
       setEditingService(serviceData);
       setServiceForm({
         name: serviceData.name || '',
@@ -623,9 +602,9 @@ const AdminPanel = () => {
   const handleDeleteCategory = async (categoryId) => {
     if (window.confirm('Ви впевнені, що хочете видалити цю категорію? Всі послуги в цій категорії та записи на ці послуги також будуть видалені.')) {
       try {
-        const response = await api.delete(`/api/admin/${categoryId}/delete_category/`);
+        await api.delete(`/api/admin/${categoryId}/delete_category/`);
         toast.success(t('category_deleted_success'));
-        
+
         // Оновлюємо списки категорій та послуг
         const [categoriesResponse, servicesResponse] = await Promise.all([
           api.get(`/api/admin/categories_management/?language=${language}`),
@@ -765,11 +744,11 @@ const AdminPanel = () => {
         ...stoInfoForm,
         what_you_can_items: stoInfoForm.what_you_can_items.filter(item => item.trim() !== '')
       };
-      
-      const response = await api.post('/api/admin/update_home_page/', formData);
+
+      await api.post('/api/admin/update_home_page/', formData);
       toast.success('Інформацію про СТО оновлено');
       setShowStoInfoForm(false);
-      
+
       // Оновлюємо дані після успішного збереження
       const stoInfoResponse = await api.get(`/api/admin/home_page_management/?language=${language}`);
       setStoInfo(stoInfoResponse.data);
@@ -790,11 +769,11 @@ const AdminPanel = () => {
         ...stoInfoFormEn,
         what_you_can_items_en: stoInfoFormEn.what_you_can_items_en.filter(item => item.trim() !== '')
       };
-      
-      const response = await api.post('/api/admin/update_home_page/', formData);
+
+      await api.post('/api/admin/update_home_page/', formData);
       toast.success('English version of STO information updated');
       setShowStoInfoFormEn(false);
-      
+
       // Оновлюємо дані після успішного збереження
       const stoInfoResponse = await api.get(`/api/admin/home_page_management/?language=${language}`);
       setStoInfo(stoInfoResponse.data);
@@ -814,47 +793,47 @@ const AdminPanel = () => {
   return (
     <div key={`admin-panel-${language}`}>
       <h1 className="page-title">{t('admin_panel_title')}</h1>
-      
+
       {/* Навігація по вкладках */}
       <div className="tabs">
-        <button 
+        <button
           className={`tab ${activeTab === 'statistics' ? 'active' : ''}`}
           onClick={() => setActiveTab('statistics')}
         >
           {t('statistics')}
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'customers' ? 'active' : ''}`}
           onClick={() => setActiveTab('customers')}
         >
           {t('customers')}
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'appointments' ? 'active' : ''}`}
           onClick={() => setActiveTab('appointments')}
         >
           {t('appointments')}
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'services' ? 'active' : ''}`}
           onClick={() => setActiveTab('services')}
-                >
+        >
           {t('services')}
         </button>
 
-        <button 
+        <button
           className={`tab ${activeTab === 'categories' ? 'active' : ''}`}
           onClick={() => setActiveTab('categories')}
         >
           {t('categories')}
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'boxes' ? 'active' : ''}`}
           onClick={() => setActiveTab('boxes')}
         >
           {t('boxes')}
         </button>
-        <button 
+        <button
           className={`tab ${activeTab === 'homepage' ? 'active' : ''}`}
           onClick={() => setActiveTab('homepage')}
         >
@@ -868,7 +847,7 @@ const AdminPanel = () => {
           <div className="card-header">
             <h2 className="section-title">{t('statistics')}</h2>
           </div>
-          
+
           <div className="grid grid-4">
             <div className="text-center">
               <h3>{statistics.total_appointments}</h3>
@@ -923,18 +902,18 @@ const AdminPanel = () => {
               })}
             </p>
           </div>
-          
+
           <div className="weekly-schedule">
             {Object.values(weeklySchedule.schedule).map((day, index) => (
               <div key={day.date} className="schedule-day">
                 <div className="day-header">
                   <h3>{getDayName(day.day_name)}</h3>
-                  <span className="date">{new Date(day.date).toLocaleDateString(language === 'en' ? 'en-US' : 'uk-UA', { 
-                    day: 'numeric', 
+                  <span className="date">{new Date(day.date).toLocaleDateString(language === 'en' ? 'en-US' : 'uk-UA', {
+                    day: 'numeric',
                     month: language === 'en' ? 'short' : 'short'
                   })}</span>
                 </div>
-                
+
                 <div className="boxes-schedule">
                   {Object.values(day.boxes_schedule).map((boxSchedule) => (
                     <div key={boxSchedule.box_id} className="box-schedule">
@@ -944,7 +923,7 @@ const AdminPanel = () => {
                           {boxSchedule.appointments.length} {t('appointments_count')}
                         </span>
                       </div>
-                      
+
                       <div className="appointments-list">
                         {boxSchedule.appointments.length === 0 ? (
                           <div className="no-appointments">
@@ -992,7 +971,7 @@ const AdminPanel = () => {
           <div className="card-header">
             <h2 className="section-title">{t('customer_management')}</h2>
           </div>
-          
+
           <div className="table-responsive">
             <table className="table">
               <thead>
@@ -1009,8 +988,8 @@ const AdminPanel = () => {
                     <td>{customer.user.first_name} {customer.user.last_name}</td>
                     <td>{customer.user.email}</td>
                     <td>
-                      {customer.is_blocked ? 
-                        <span className="badge badge-danger">{t('blocked')}</span> : 
+                      {customer.is_blocked ?
+                        <span className="badge badge-danger">{t('blocked')}</span> :
                         <span className="badge badge-success">{t('active')}</span>
                       }
                     </td>
@@ -1054,13 +1033,13 @@ const AdminPanel = () => {
           <div className="card-header">
             <h2 className="section-title">{t('appointments_management')}</h2>
             <div className="filters-container">
-              <button 
+              <button
                 className="btn btn-secondary btn-sm"
                 onClick={() => setShowAppointmentFilters(true)}
               >
                 {getActiveFiltersCount() > 0 ? `${t('filters')} (${getActiveFiltersCount()})` : t('filters')}
               </button>
-              <button 
+              <button
                 className="btn btn-outline-secondary btn-sm"
                 onClick={clearAppointmentFilters}
                 disabled={getActiveFiltersCount() === 0}
@@ -1069,97 +1048,97 @@ const AdminPanel = () => {
               </button>
             </div>
           </div>
-          
+
           <div className="table-responsive">
             {!Array.isArray(appointments) || appointments.length === 0 ? (
               <div className="text-center p-3">
                 <p>{!Array.isArray(appointments) ? t('loading_appointments') : t('no_appointments_found')}</p>
               </div>
             ) : (
-            <table className="table" key={`appointments-table-${language}`}>
-              <thead>
-                <tr>
-                  <th>{t('client')}</th>
-                  <th>{t('service')}</th>
-                  <th>{t('box_name')}</th>
-                  <th>{t('date')}</th>
-                  <th>{t('time')}</th>
-                  <th>{t('status')}</th>
-                  <th>{t('cost')}</th>
-                  <th>{t('actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {appointments.map(appointment => (
-                  <tr key={appointment.id}>
-                    <td>
-                      {appointment.customer ? 
-                        `${appointment.customer.user?.first_name || ''} ${appointment.customer.user?.last_name || ''}`.trim() || 
-                        appointment.guest_name :
-                        appointment.guest_name
-                      }
-                    </td>
-                    <td>{appointment.service?.get_name ? appointment.service.get_name(language) : appointment.service?.name}</td>
-                    <td>{appointment.box?.get_name ? appointment.box.get_name(language) : appointment.box?.name}</td>
-                    <td>{formatDate(appointment.appointment_date)}</td>
-                    <td>{formatTime(appointment.appointment_time)}</td>
-                    <td>
-                      <span className={getStatusBadgeClass(appointment.status)}>
-                        {getStatusText(appointment.status)}
-                      </span>
-                    </td>
-                    <td>
-                      {appointment.total_price} {language === 'en' ? 'UAH' : 'грн'}
-                      {(() => {
-                        const selectedService = appointment.service;
-                        if (selectedService && selectedService.price !== appointment.total_price) {
-                          const discountAmount = selectedService.price - appointment.total_price;
-                          const discountPercentage = (discountAmount / selectedService.price) * 100;
-                          return (
-                            <span className="discount-applied">
-                              {' '}({t('discount')} {discountPercentage.toFixed(1)}%)
-                            </span>
-                          );
-                        }
-                        return null;
-                      })()}
-                    </td>
-                    <td>
-                      {appointment.status === 'pending' && (
-                        <button
-                          className="btn btn-info btn-sm"
-                          onClick={() => handleConfirmAppointment(appointment.id)}
-                        >
-                          {t('confirm')}
-                        </button>
-                      )}
-                      {appointment.status === 'confirmed' && (
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() => handleCompleteAppointment(appointment.id)}
-                        >
-                          {t('complete')}
-                        </button>
-                      )}
-                      {(appointment.status === 'pending' || appointment.status === 'confirmed') && (
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleCancelAppointment(appointment.id)}
-                        >
-                          {t('cancel')}
-                        </button>
-                      )}
-                      <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => handleViewAppointmentDetails(appointment.id)}
-                      >
-                        {t('details')}
-                      </button>
-                    </td>
+              <table className="table" key={`appointments-table-${language}`}>
+                <thead>
+                  <tr>
+                    <th>{t('client')}</th>
+                    <th>{t('service')}</th>
+                    <th>{t('box_name')}</th>
+                    <th>{t('date')}</th>
+                    <th>{t('time')}</th>
+                    <th>{t('status')}</th>
+                    <th>{t('cost')}</th>
+                    <th>{t('actions')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {appointments.map(appointment => (
+                    <tr key={appointment.id}>
+                      <td>
+                        {appointment.customer ?
+                          `${appointment.customer.user?.first_name || ''} ${appointment.customer.user?.last_name || ''}`.trim() ||
+                          appointment.guest_name :
+                          appointment.guest_name
+                        }
+                      </td>
+                      <td>{appointment.service?.get_name ? appointment.service.get_name(language) : appointment.service?.name}</td>
+                      <td>{appointment.box?.get_name ? appointment.box.get_name(language) : appointment.box?.name}</td>
+                      <td>{formatDate(appointment.appointment_date)}</td>
+                      <td>{formatTime(appointment.appointment_time)}</td>
+                      <td>
+                        <span className={getStatusBadgeClass(appointment.status)}>
+                          {getStatusText(appointment.status)}
+                        </span>
+                      </td>
+                      <td>
+                        {appointment.total_price} {language === 'en' ? 'UAH' : 'грн'}
+                        {(() => {
+                          const selectedService = appointment.service;
+                          if (selectedService && selectedService.price !== appointment.total_price) {
+                            const discountAmount = selectedService.price - appointment.total_price;
+                            const discountPercentage = (discountAmount / selectedService.price) * 100;
+                            return (
+                              <span className="discount-applied">
+                                {' '}({t('discount')} {discountPercentage.toFixed(1)}%)
+                              </span>
+                            );
+                          }
+                          return null;
+                        })()}
+                      </td>
+                      <td>
+                        {appointment.status === 'pending' && (
+                          <button
+                            className="btn btn-info btn-sm"
+                            onClick={() => handleConfirmAppointment(appointment.id)}
+                          >
+                            {t('confirm')}
+                          </button>
+                        )}
+                        {appointment.status === 'confirmed' && (
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => handleCompleteAppointment(appointment.id)}
+                          >
+                            {t('complete')}
+                          </button>
+                        )}
+                        {(appointment.status === 'pending' || appointment.status === 'confirmed') && (
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleCancelAppointment(appointment.id)}
+                          >
+                            {t('cancel')}
+                          </button>
+                        )}
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => handleViewAppointmentDetails(appointment.id)}
+                        >
+                          {t('details')}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>
@@ -1170,14 +1149,14 @@ const AdminPanel = () => {
         <div className="card">
           <div className="card-header">
             <h2 className="section-title">{t('services_management')}</h2>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => setShowServiceForm(true)}
             >
               {t('add_service')}
             </button>
           </div>
-          
+
           <div className="table-responsive">
             <table className="table" key={`services-table-${language}`}>
               <thead>
@@ -1238,14 +1217,14 @@ const AdminPanel = () => {
         <div className="card">
           <div className="card-header">
             <h2 className="section-title">{t('categories_management')}</h2>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => setShowCategoryForm(true)}
             >
               {t('add_category')}
             </button>
           </div>
-          
+
           <div className="table-responsive">
             <table className="table" key={`categories-table-${language}`}>
               <thead>
@@ -1291,14 +1270,14 @@ const AdminPanel = () => {
         <div className="card">
           <div className="card-header">
             <h2 className="section-title">{t('boxes_management')}</h2>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => setShowBoxForm(true)}
             >
               {t('add_box')}
             </button>
           </div>
-          
+
           <div className="table-responsive">
             <table className="table" key={`boxes-table-${language}`}>
               <thead>
@@ -1355,7 +1334,7 @@ const AdminPanel = () => {
           <div className="card-header">
             <h2 className="section-title">{t('homepage_management')}</h2>
             <div className="button-group">
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={() => {
                   if (stoInfo) {
@@ -1365,8 +1344,8 @@ const AdminPanel = () => {
                       motto: stoInfo.motto,
                       welcome_text: stoInfo.welcome_text,
                       what_you_can_title: stoInfo.what_you_can_title,
-                      what_you_can_items: stoInfo.what_you_can_items && stoInfo.what_you_can_items.length > 0 
-                        ? stoInfo.what_you_can_items 
+                      what_you_can_items: stoInfo.what_you_can_items && stoInfo.what_you_can_items.length > 0
+                        ? stoInfo.what_you_can_items
                         : [''],
                       address: stoInfo.address,
                       phone: stoInfo.phone,
@@ -1380,7 +1359,7 @@ const AdminPanel = () => {
               >
                 {t('edit_info_ukrainian')}
               </button>
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => {
                   if (stoInfo) {
@@ -1390,8 +1369,8 @@ const AdminPanel = () => {
                       motto_en: stoInfo.motto_en || '',
                       welcome_text_en: stoInfo.welcome_text_en || '',
                       what_you_can_title_en: stoInfo.what_you_can_title_en || '',
-                      what_you_can_items_en: stoInfo.what_you_can_items_en && stoInfo.what_you_can_items_en.length > 0 
-                        ? stoInfo.what_you_can_items_en 
+                      what_you_can_items_en: stoInfo.what_you_can_items_en && stoInfo.what_you_can_items_en.length > 0
+                        ? stoInfo.what_you_can_items_en
                         : [''],
                       address_en: stoInfo.address_en || '',
                       phone: stoInfo.phone,
@@ -1405,7 +1384,7 @@ const AdminPanel = () => {
               >
                 {t('edit_info_english')}
               </button>
-              <button 
+              <button
                 className="btn btn-info"
                 onClick={() => setShowFeaturedServicesForm(true)}
               >
@@ -1413,33 +1392,33 @@ const AdminPanel = () => {
               </button>
             </div>
           </div>
-          
+
           {stoInfo && (
             <div className="sto-info-preview">
               <h3>{t('current_sto_info')}</h3>
               <div className="info-grid">
                 <div>
-                  <strong>{t('sto_name_label')}</strong> 
+                  <strong>{t('sto_name_label')}</strong>
                   <span className="text-content">{stoInfo.name}</span>
                 </div>
                 <div>
-                  <strong>{t('sto_motto_label')}</strong> 
+                  <strong>{t('sto_motto_label')}</strong>
                   <span className="text-content">{stoInfo.motto}</span>
                 </div>
                 <div>
-                  <strong>{t('sto_address_label')}</strong> 
+                  <strong>{t('sto_address_label')}</strong>
                   <span className="text-content">{stoInfo.address}</span>
                 </div>
                 <div>
-                  <strong>{t('sto_phone_label')}</strong> 
+                  <strong>{t('sto_phone_label')}</strong>
                   <span className="text-content">{stoInfo.phone}</span>
                 </div>
                 <div>
-                  <strong>{t('sto_email_label')}</strong> 
+                  <strong>{t('sto_email_label')}</strong>
                   <span className="text-content">{stoInfo.email}</span>
                 </div>
                 <div>
-                  <strong>{t('sto_working_hours_label')}</strong> 
+                  <strong>{t('sto_working_hours_label')}</strong>
                   <span className="text-content">{stoInfo.working_hours}</span>
                 </div>
               </div>
@@ -1470,7 +1449,7 @@ const AdminPanel = () => {
           <div className="modal" key={`service-form-${language}`}>
             <div className="modal-header">
               <h3>{editingService ? t('edit_service') : t('add_service')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => {
                   setShowServiceForm(false);
@@ -1496,7 +1475,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={serviceForm.name}
-                  onChange={(e) => setServiceForm({...serviceForm, name: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, name: e.target.value })}
                   required
                 />
               </div>
@@ -1505,7 +1484,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={serviceForm.name_en}
-                  onChange={(e) => setServiceForm({...serviceForm, name_en: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, name_en: e.target.value })}
                   required
                 />
               </div>
@@ -1513,14 +1492,14 @@ const AdminPanel = () => {
                 <label>{t('service_description_label')} (Українська)</label>
                 <textarea
                   value={serviceForm.description}
-                  onChange={(e) => setServiceForm({...serviceForm, description: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, description: e.target.value })}
                 />
               </div>
               <div className="form-group">
                 <label>{t('service_description_label')} (English)</label>
                 <textarea
                   value={serviceForm.description_en}
-                  onChange={(e) => setServiceForm({...serviceForm, description_en: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, description_en: e.target.value })}
                 />
               </div>
               <div className="form-row">
@@ -1530,7 +1509,7 @@ const AdminPanel = () => {
                     type="number"
                     step="0.01"
                     value={serviceForm.price}
-                    onChange={(e) => setServiceForm({...serviceForm, price: e.target.value})}
+                    onChange={(e) => setServiceForm({ ...serviceForm, price: e.target.value })}
                     required
                   />
                 </div>
@@ -1539,7 +1518,7 @@ const AdminPanel = () => {
                   <input
                     type="number"
                     value={serviceForm.duration_minutes}
-                    onChange={(e) => setServiceForm({...serviceForm, duration_minutes: e.target.value})}
+                    onChange={(e) => setServiceForm({ ...serviceForm, duration_minutes: e.target.value })}
                     required
                   />
                 </div>
@@ -1548,7 +1527,7 @@ const AdminPanel = () => {
                 <label>{t('service_category_label')}</label>
                 <select
                   value={serviceForm.category_id}
-                  onChange={(e) => setServiceForm({...serviceForm, category_id: e.target.value})}
+                  onChange={(e) => setServiceForm({ ...serviceForm, category_id: e.target.value })}
                 >
                   <option value="">{t('not_specified')}</option>
                   {categories.map(category => (
@@ -1563,7 +1542,7 @@ const AdminPanel = () => {
                   <input
                     type="checkbox"
                     checked={serviceForm.is_active}
-                    onChange={(e) => setServiceForm({...serviceForm, is_active: e.target.checked})}
+                    onChange={(e) => setServiceForm({ ...serviceForm, is_active: e.target.checked })}
                   />
                   {t('service_active_label')}
                 </label>
@@ -1572,8 +1551,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   {editingService ? t('service_update') : t('service_create')}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => {
                     setShowServiceForm(false);
@@ -1605,7 +1584,7 @@ const AdminPanel = () => {
           <div className="modal" key={`category-form-${language}`}>
             <div className="modal-header">
               <h3>{editingCategory ? t('edit_category') : t('add_category')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => {
                   setShowCategoryForm(false);
@@ -1628,7 +1607,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={categoryForm.name}
-                  onChange={(e) => setCategoryForm({...categoryForm, name: e.target.value})}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
                   required
                 />
               </div>
@@ -1637,7 +1616,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={categoryForm.name_en}
-                  onChange={(e) => setCategoryForm({...categoryForm, name_en: e.target.value})}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, name_en: e.target.value })}
                   required
                 />
               </div>
@@ -1645,14 +1624,14 @@ const AdminPanel = () => {
                 <label>{t('category_description_label')} (Українська)</label>
                 <textarea
                   value={categoryForm.description}
-                  onChange={(e) => setCategoryForm({...categoryForm, description: e.target.value})}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, description: e.target.value })}
                 />
               </div>
               <div className="form-group">
                 <label>{t('category_description_label')} (English)</label>
                 <textarea
                   value={categoryForm.description_en}
-                  onChange={(e) => setCategoryForm({...categoryForm, description_en: e.target.value})}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, description_en: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -1660,7 +1639,7 @@ const AdminPanel = () => {
                 <input
                   type="number"
                   value={categoryForm.order}
-                  onChange={(e) => setCategoryForm({...categoryForm, order: e.target.value})}
+                  onChange={(e) => setCategoryForm({ ...categoryForm, order: e.target.value })}
                   placeholder="Автоматично (залиште порожнім)"
                 />
               </div>
@@ -1669,8 +1648,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   {editingCategory ? t('category_update') : t('category_create')}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => {
                     setShowCategoryForm(false);
@@ -1699,7 +1678,7 @@ const AdminPanel = () => {
           <div className="modal" key={`box-form-${language}`}>
             <div className="modal-header">
               <h3>{editingBox ? t('edit_box') : t('add_box')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => {
                   setShowBoxForm(false);
@@ -1731,7 +1710,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={boxForm.name}
-                  onChange={(e) => setBoxForm({...boxForm, name: e.target.value})}
+                  onChange={(e) => setBoxForm({ ...boxForm, name: e.target.value })}
                   required
                 />
               </div>
@@ -1740,7 +1719,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={boxForm.name_en}
-                  onChange={(e) => setBoxForm({...boxForm, name_en: e.target.value})}
+                  onChange={(e) => setBoxForm({ ...boxForm, name_en: e.target.value })}
                   required
                 />
               </div>
@@ -1748,14 +1727,14 @@ const AdminPanel = () => {
                 <label>{t('box_description_label')} (Українська)</label>
                 <textarea
                   value={boxForm.description}
-                  onChange={(e) => setBoxForm({...boxForm, description: e.target.value})}
+                  onChange={(e) => setBoxForm({ ...boxForm, description: e.target.value })}
                 />
               </div>
               <div className="form-group">
                 <label>{t('box_description_label')} (English)</label>
                 <textarea
                   value={boxForm.description_en}
-                  onChange={(e) => setBoxForm({...boxForm, description_en: e.target.value})}
+                  onChange={(e) => setBoxForm({ ...boxForm, description_en: e.target.value })}
                 />
               </div>
               <div className="form-group">
@@ -1763,7 +1742,7 @@ const AdminPanel = () => {
                   <input
                     type="checkbox"
                     checked={boxForm.is_active}
-                    onChange={(e) => setBoxForm({...boxForm, is_active: e.target.checked})}
+                    onChange={(e) => setBoxForm({ ...boxForm, is_active: e.target.checked })}
                   />
                   {t('box_active_label')}
                 </label>
@@ -1797,8 +1776,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   {editingBox ? t('box_update') : t('box_create')}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => {
                     setShowBoxForm(false);
@@ -1835,7 +1814,7 @@ const AdminPanel = () => {
           <div className="modal">
             <div className="modal-header">
               <h3>{t('edit_sto_info')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => setShowStoInfoForm(false)}
               >
@@ -1848,7 +1827,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoForm.name}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, name: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, name: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -1859,7 +1838,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoForm.motto}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, motto: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, motto: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -1869,7 +1848,7 @@ const AdminPanel = () => {
                 <label>Опис:</label>
                 <textarea
                   value={stoInfoForm.description}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, description: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, description: e.target.value })}
                   maxLength={1000}
                   required
                 />
@@ -1879,7 +1858,7 @@ const AdminPanel = () => {
                 <label>Привітальний текст:</label>
                 <textarea
                   value={stoInfoForm.welcome_text}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, welcome_text: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, welcome_text: e.target.value })}
                   maxLength={1000}
                   required
                 />
@@ -1890,7 +1869,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoForm.what_you_can_title}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, what_you_can_title: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, what_you_can_title: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -1907,7 +1886,7 @@ const AdminPanel = () => {
                         onChange={(e) => {
                           const newItems = [...stoInfoForm.what_you_can_items];
                           newItems[index] = e.target.value;
-                          setStoInfoForm({...stoInfoForm, what_you_can_items: newItems});
+                          setStoInfoForm({ ...stoInfoForm, what_you_can_items: newItems });
                         }}
                         maxLength={300}
                         placeholder={`Пункт ${index + 1}`}
@@ -1918,7 +1897,7 @@ const AdminPanel = () => {
                         onClick={() => {
                           if (stoInfoForm.what_you_can_items.length > 1) {
                             const newItems = stoInfoForm.what_you_can_items.filter((_, i) => i !== index);
-                            setStoInfoForm({...stoInfoForm, what_you_can_items: newItems});
+                            setStoInfoForm({ ...stoInfoForm, what_you_can_items: newItems });
                           }
                         }}
                         disabled={stoInfoForm.what_you_can_items.length <= 1}
@@ -1932,7 +1911,7 @@ const AdminPanel = () => {
                     className="btn btn-secondary btn-sm"
                     onClick={() => {
                       setStoInfoForm({
-                        ...stoInfoForm, 
+                        ...stoInfoForm,
                         what_you_can_items: [...stoInfoForm.what_you_can_items, '']
                       });
                     }}
@@ -1946,7 +1925,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoForm.address}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, address: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, address: e.target.value })}
                   maxLength={500}
                   required
                 />
@@ -1958,7 +1937,7 @@ const AdminPanel = () => {
                   <input
                     type="text"
                     value={stoInfoForm.phone}
-                    onChange={(e) => setStoInfoForm({...stoInfoForm, phone: e.target.value})}
+                    onChange={(e) => setStoInfoForm({ ...stoInfoForm, phone: e.target.value })}
                     maxLength={20}
                     required
                   />
@@ -1968,7 +1947,7 @@ const AdminPanel = () => {
                   <input
                     type="email"
                     value={stoInfoForm.email}
-                    onChange={(e) => setStoInfoForm({...stoInfoForm, email: e.target.value})}
+                    onChange={(e) => setStoInfoForm({ ...stoInfoForm, email: e.target.value })}
                     maxLength={254}
                     required
                   />
@@ -1979,7 +1958,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoForm.working_hours}
-                  onChange={(e) => setStoInfoForm({...stoInfoForm, working_hours: e.target.value})}
+                  onChange={(e) => setStoInfoForm({ ...stoInfoForm, working_hours: e.target.value })}
                   maxLength={100}
                   required
                 />
@@ -1989,7 +1968,7 @@ const AdminPanel = () => {
                   <input
                     type="checkbox"
                     checked={stoInfoForm.is_active}
-                    onChange={(e) => setStoInfoForm({...stoInfoForm, is_active: e.target.checked})}
+                    onChange={(e) => setStoInfoForm({ ...stoInfoForm, is_active: e.target.checked })}
                   />
                   Активна
                 </label>
@@ -1998,8 +1977,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   Оновити
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => setShowStoInfoForm(false)}
                 >
@@ -2017,7 +1996,7 @@ const AdminPanel = () => {
           <div className="modal">
             <div className="modal-header">
               <h3>Edit STO Information (English)</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => setShowStoInfoFormEn(false)}
               >
@@ -2030,7 +2009,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoFormEn.name_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, name_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, name_en: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -2041,7 +2020,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoFormEn.motto_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, motto_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, motto_en: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -2051,7 +2030,7 @@ const AdminPanel = () => {
                 <label>Description:</label>
                 <textarea
                   value={stoInfoFormEn.description_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, description_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, description_en: e.target.value })}
                   maxLength={1000}
                   required
                 />
@@ -2061,7 +2040,7 @@ const AdminPanel = () => {
                 <label>Welcome Text:</label>
                 <textarea
                   value={stoInfoFormEn.welcome_text_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, welcome_text_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, welcome_text_en: e.target.value })}
                   maxLength={1000}
                   required
                 />
@@ -2072,7 +2051,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoFormEn.what_you_can_title_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, what_you_can_title_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, what_you_can_title_en: e.target.value })}
                   maxLength={200}
                   required
                 />
@@ -2089,7 +2068,7 @@ const AdminPanel = () => {
                         onChange={(e) => {
                           const newItems = [...stoInfoFormEn.what_you_can_items_en];
                           newItems[index] = e.target.value;
-                          setStoInfoFormEn({...stoInfoFormEn, what_you_can_items_en: newItems});
+                          setStoInfoFormEn({ ...stoInfoFormEn, what_you_can_items_en: newItems });
                         }}
                         maxLength={300}
                         placeholder={`Item ${index + 1}`}
@@ -2100,7 +2079,7 @@ const AdminPanel = () => {
                         onClick={() => {
                           if (stoInfoFormEn.what_you_can_items_en.length > 1) {
                             const newItems = stoInfoFormEn.what_you_can_items_en.filter((_, i) => i !== index);
-                            setStoInfoFormEn({...stoInfoFormEn, what_you_can_items_en: newItems});
+                            setStoInfoFormEn({ ...stoInfoFormEn, what_you_can_items_en: newItems });
                           }
                         }}
                         disabled={stoInfoFormEn.what_you_can_items_en.length <= 1}
@@ -2114,7 +2093,7 @@ const AdminPanel = () => {
                     className="btn btn-secondary btn-sm"
                     onClick={() => {
                       setStoInfoFormEn({
-                        ...stoInfoFormEn, 
+                        ...stoInfoFormEn,
                         what_you_can_items_en: [...stoInfoFormEn.what_you_can_items_en, '']
                       });
                     }}
@@ -2128,7 +2107,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoFormEn.address_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, address_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, address_en: e.target.value })}
                   maxLength={500}
                   required
                 />
@@ -2140,7 +2119,7 @@ const AdminPanel = () => {
                   <input
                     type="text"
                     value={stoInfoFormEn.phone}
-                    onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, phone: e.target.value})}
+                    onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, phone: e.target.value })}
                     maxLength={20}
                     required
                   />
@@ -2150,7 +2129,7 @@ const AdminPanel = () => {
                   <input
                     type="email"
                     value={stoInfoFormEn.email}
-                    onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, email: e.target.value})}
+                    onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, email: e.target.value })}
                     maxLength={254}
                     required
                   />
@@ -2161,7 +2140,7 @@ const AdminPanel = () => {
                 <input
                   type="text"
                   value={stoInfoFormEn.working_hours_en}
-                  onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, working_hours_en: e.target.value})}
+                  onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, working_hours_en: e.target.value })}
                   maxLength={100}
                   required
                 />
@@ -2171,7 +2150,7 @@ const AdminPanel = () => {
                   <input
                     type="checkbox"
                     checked={stoInfoFormEn.is_active}
-                    onChange={(e) => setStoInfoFormEn({...stoInfoFormEn, is_active: e.target.checked})}
+                    onChange={(e) => setStoInfoFormEn({ ...stoInfoFormEn, is_active: e.target.checked })}
                   />
                   Active
                 </label>
@@ -2180,8 +2159,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   Update
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => setShowStoInfoFormEn(false)}
                 >
@@ -2199,7 +2178,7 @@ const AdminPanel = () => {
           <div className="modal" key={`appointment-filters-${language}`}>
             <div className="modal-header">
               <h3>{t('appointment_filters')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => setShowAppointmentFilters(false)}
               >
@@ -2208,8 +2187,8 @@ const AdminPanel = () => {
             </div>
             <form onSubmit={(e) => {
               e.preventDefault();
-              debouncedFetchAppointments();
               setShowAppointmentFilters(false);
+              // Оновлення відбудеться автоматично через useEffect при зміні appointmentFilters
             }}>
               <div className="form-group">
                 <label>{t('date_from')}</label>
@@ -2322,8 +2301,8 @@ const AdminPanel = () => {
                 <button type="submit" className="btn btn-primary">
                   {t('apply_filters')}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={clearAppointmentFilters}
                 >
@@ -2341,7 +2320,7 @@ const AdminPanel = () => {
           <div className="modal" key={`appointment-details-${language}`}>
             <div className="modal-header">
               <h3>{t('appointment_details')} #{selectedAppointment.id}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => {
                   setShowAppointmentDetails(false);
@@ -2355,8 +2334,8 @@ const AdminPanel = () => {
               <div className="detail-row">
                 <strong>{t('client')}:</strong>
                 <span>
-                  {selectedAppointment.customer ? 
-                    `${selectedAppointment.customer.user?.first_name || ''} ${selectedAppointment.customer.user?.last_name || ''}`.trim() || 
+                  {selectedAppointment.customer ?
+                    `${selectedAppointment.customer.user?.first_name || ''} ${selectedAppointment.customer.user?.last_name || ''}`.trim() ||
                     selectedAppointment.guest_name :
                     selectedAppointment.guest_name
                   }
@@ -2440,7 +2419,7 @@ const AdminPanel = () => {
             </div>
             <div className="modal-footer">
               {(selectedAppointment.status === 'pending' || selectedAppointment.status === 'confirmed') && (
-                <button 
+                <button
                   className="btn btn-danger"
                   onClick={() => {
                     handleCancelAppointment(selectedAppointment.id);
@@ -2451,8 +2430,8 @@ const AdminPanel = () => {
                   {t('cancel_appointment')}
                 </button>
               )}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-secondary"
                 onClick={() => {
                   setShowAppointmentDetails(false);
@@ -2472,8 +2451,8 @@ const AdminPanel = () => {
           <div className="modal customer-edit-modal">
             <div className="modal-header">
               <h3>Редагування клієнта</h3>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn-close"
                 onClick={() => {
                   setShowCustomerEditForm(false);
@@ -2503,7 +2482,7 @@ const AdminPanel = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label>Фамілія</label>
                   <input
@@ -2516,7 +2495,7 @@ const AdminPanel = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="form-group">
                 <label>Email</label>
                 <input
@@ -2528,13 +2507,13 @@ const AdminPanel = () => {
                   required
                 />
               </div>
-              
 
-              
+
+
               <div className="password-section">
                 <h4>Зміна пароля</h4>
                 <p className="password-hint">Залиште поля порожніми, якщо не хочете змінювати пароль</p>
-                
+
                 <div className="form-row">
                   <div className="form-group">
                     <label>Новий пароль</label>
@@ -2550,7 +2529,7 @@ const AdminPanel = () => {
                       Пароль повинен містити мінімум 8 символів, великі та малі літери, цифри
                     </small>
                   </div>
-                  
+
                   <div className="form-group">
                     <label>Підтвердіть новий пароль</label>
                     <input
@@ -2567,11 +2546,11 @@ const AdminPanel = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="modal-footer">
                 <button type="submit" className="btn btn-primary">Зберегти зміни</button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-secondary"
                   onClick={() => {
                     setShowCustomerEditForm(false);
@@ -2599,7 +2578,7 @@ const AdminPanel = () => {
           <div className="modal">
             <div className="modal-header">
               <h3>{t('manage_featured_services')}</h3>
-              <button 
+              <button
                 className="btn btn-close"
                 onClick={() => setShowFeaturedServicesForm(false)}
               >
@@ -2608,7 +2587,7 @@ const AdminPanel = () => {
             </div>
             <div className="modal-body">
               <p>{t('select_featured_services_description')}</p>
-              
+
               <div className="featured-services-list">
                 {services.map(service => (
                   <div key={service.id} className="featured-service-item">
@@ -2635,8 +2614,8 @@ const AdminPanel = () => {
               </div>
             </div>
             <div className="modal-footer">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="btn btn-primary"
                 onClick={() => setShowFeaturedServicesForm(false)}
               >

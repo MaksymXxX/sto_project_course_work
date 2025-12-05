@@ -15,12 +15,29 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState(undefined);
 
   useEffect(() => {
+    const fetchAvailableDates = async () => {
+      if (!selectedService || !selectedService.id) return;
+
+      try {
+        let url = `/api/boxes/available_dates/?service_id=${selectedService.id}`;
+        if (excludeAppointmentId) {
+          url += `&exclude_appointment_id=${excludeAppointmentId}`;
+        }
+        const response = await api.get(url);
+        const dates = response.data.available_dates || [];
+        setAvailableDatesList(dates);
+      } catch (error) {
+        console.error('Помилка завантаження доступних дат:', error);
+        setAvailableDatesList([]);
+      }
+    };
+
     if (!disabled && availableDates.length === 0) {
       fetchAvailableDates();
     } else {
       setAvailableDatesList(availableDates);
     }
-  }, [disabled, availableDates, selectedService]);
+  }, [disabled, availableDates, selectedService, excludeAppointmentId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -57,57 +74,33 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
     };
   }, [isOpen]);
 
-  const fetchAvailableDates = async () => {
-    try {
-      let url = '/api/boxes/available_dates/';
-      if (selectedService && selectedService.id) {
-        url += `?service_id=${selectedService.id}`;
-        if (excludeAppointmentId) {
-          url += `&exclude_appointment_id=${excludeAppointmentId}`;
-        }
-      }
-      const response = await api.get(url);
-      setAvailableDatesList(response.data.available_dates || []);
-    } catch (error) {
-      console.error('Помилка отримання доступних дат:', error);
-    }
-  };
-
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
-    
+
     // Перший день місяця
     const firstDayOfMonth = new Date(year, month, 1);
-    
+
     // Останній день місяця
     const lastDayOfMonth = new Date(year, month + 1, 0);
     const daysInMonth = lastDayOfMonth.getDate();
-    
+
     // День тижня для першого дня місяця (0 = неділя, 1 = понеділок, ...)
     const startingDayOfWeek = firstDayOfMonth.getDay();
-    
-    // Використовуємо локальну дату замість UTC
-    const firstDayLocal = `${year}-${String(month + 1).padStart(2, '0')}-01`;
-    
+
     const days = [];
-    
+
     // Додаємо пусті дні для початку місяця
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Додаємо дні місяця
     for (let i = 1; i <= daysInMonth; i++) {
       days.push(new Date(year, month, i));
     }
-    
-    return days;
-  };
 
-  const getDayName = (date) => {
-    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    return dayNames[date.getDay()];
+    return days;
   };
 
   const isDateAvailable = (date) => {
@@ -136,29 +129,19 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       const dateStr = `${year}-${month}-${day}`;
-      
+
       // Викликаємо onChange з правильним об'єктом події
       if (onChange) {
         onChange({ target: { name: 'appointment_date', value: dateStr } });
       }
-      
+
       // Викликаємо onDateSelect callback якщо він переданий
       if (onDateSelect && selectedService) {
         onDateSelect(dateStr, selectedService);
       }
-      
+
       setIsOpen(false);
     }
-  };
-
-  const formatDate = (date) => {
-    if (!date) return '';
-    const locale = language === 'en' ? 'en-US' : 'uk-UA';
-    return date.toLocaleDateString(locale, {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
   };
 
   const formatDisplayDate = (date) => {
@@ -205,12 +188,12 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
         readOnly
         disabled={disabled}
         placeholder={translations.select_date_placeholder[language]}
-        style={{ 
+        style={{
           opacity: disabled ? 0.6 : 1,
           cursor: disabled ? 'not-allowed' : 'pointer'
         }}
       />
-      
+
       {isOpen && !disabled && (
         <div
           className="date-picker-dropdown"
@@ -232,7 +215,7 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
               &gt;
             </button>
           </div>
-          
+
           <div className="date-picker-calendar">
             <div className="calendar-weekdays">
               <div>{translations.sunday_short[language]}</div>
@@ -243,20 +226,19 @@ const CustomDatePicker = ({ value, onChange, disabled, availableDates = [], sele
               <div>{translations.friday_short[language]}</div>
               <div>{translations.saturday_short[language]}</div>
             </div>
-            
+
             <div className="calendar-days">
               {days.map((day, index) => {
                 // Використовуємо локальну дату для порівняння
                 const dayDateStr = day ? `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}` : '';
-                
+
                 return (
                   <div
                     key={index}
-                    className={`calendar-day ${
-                      !day ? 'empty' :
+                    className={`calendar-day ${!day ? 'empty' :
                       isDateDisabled(day) ? 'disabled' :
-                      value === dayDateStr ? 'selected' : 'available'
-                    }`}
+                        value === dayDateStr ? 'selected' : 'available'
+                      }`}
                     onClick={() => handleDateClick(day)}
                   >
                     {day ? day.getDate() : ''}

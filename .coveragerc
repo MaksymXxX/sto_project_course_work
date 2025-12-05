@@ -1,0 +1,27 @@
+[run]
+source = backend
+omit = 
+    */migrations/*
+    */venv/*
+    */__pycache__/*
+    */tests/*
+    */management/commands/*
+    manage.py
+    */settings.py
+    */wsgi.py
+    */urls.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    # Created by coverage.py
+
+[html]
+directory = htmlcov
+

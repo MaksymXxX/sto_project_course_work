@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const ServiceHistory = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ const ServiceHistory = () => {
   return (
     <div>
       <h1 className="page-title">Історія обслуговування</h1>
-      
+
       {history.length > 0 ? (
         <div className="card">
           <div className="table-responsive">

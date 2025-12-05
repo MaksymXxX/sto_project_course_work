@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import api from '../utils/api';
 import { toast } from 'react-toastify';
 import Modal from './Modal';
@@ -6,7 +6,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import './AdminAppointments.css';
 
 const AdminAppointments = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [boxes, setBoxes] = useState([]);
@@ -14,7 +14,7 @@ const AdminAppointments = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [showFilters, setShowFilters] = useState(true);
-  
+
   // Розширені фільтри
   const [filters, setFilters] = useState({
     date_from: '',
@@ -29,37 +29,19 @@ const AdminAppointments = () => {
     price_max: ''
   });
 
-  // Debounce для фільтрів
-  const debouncedFetchData = useCallback(
-    (() => {
-      let timeoutId;
-      return () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          fetchData();
-        }, 300);
-      };
-    })(),
-    []
-  );
-
-  useEffect(() => {
-    debouncedFetchData();
-  }, [filters, debouncedFetchData]);
-
   const fetchData = async () => {
     try {
       setLoading(true);
-      
+
       // Завантажуємо бокси та послуги для фільтрів
       const [boxesResponse, servicesResponse] = await Promise.all([
         api.get('/api/boxes/'),
         api.get('/api/services/')
       ]);
-      
+
       setBoxes(boxesResponse.data);
       setServices(servicesResponse.data);
-      
+
       // Завантажуємо бронювання з фільтрами
       const params = new URLSearchParams();
       if (filters.date_from) params.append('date_from', filters.date_from);
@@ -72,7 +54,7 @@ const AdminAppointments = () => {
       if (filters.time_to) params.append('time_to', filters.time_to);
       if (filters.price_min) params.append('price_min', filters.price_min);
       if (filters.price_max) params.append('price_max', filters.price_max);
-      
+
       const appointmentsResponse = await api.get(`/api/admin/appointments/?${params.toString()}`);
       setAppointments(appointmentsResponse.data);
     } catch (error) {
@@ -111,26 +93,25 @@ const AdminAppointments = () => {
 
   const handleAppointmentAction = async (appointmentId, action) => {
     try {
-      let response;
       let successMessage = '';
-      
+
       switch (action) {
         case 'confirm':
-          response = await api.post(`/api/appointments/${appointmentId}/confirm/`);
+          await api.post(`/api/appointments/${appointmentId}/confirm/`);
           successMessage = 'Запис підтверджено';
           break;
         case 'cancel':
-          response = await api.post(`/api/appointments/${appointmentId}/cancel/`);
+          await api.post(`/api/appointments/${appointmentId}/cancel/`);
           successMessage = 'Запис скасовано';
           break;
         case 'complete':
-          response = await api.post(`/api/appointments/${appointmentId}/complete/`);
+          await api.post(`/api/appointments/${appointmentId}/complete/`);
           successMessage = 'Запис завершено';
           break;
         default:
           return;
       }
-      
+
       toast.success(successMessage);
       fetchData(); // Оновлюємо список
     } catch (error) {
@@ -203,7 +184,7 @@ const AdminAppointments = () => {
       <div className="admin-header">
         <h1>Управління бронюваннями</h1>
         <div className="header-actions">
-          <button 
+          <button
             className="btn btn-outline-primary"
             onClick={() => setShowFilters(!showFilters)}
           >
@@ -217,7 +198,7 @@ const AdminAppointments = () => {
         <div className="filters-section">
           <div className="filters-header">
             <h3>Фільтри {getActiveFiltersCount() > 0 && `(${getActiveFiltersCount()} активних)`}</h3>
-            <button 
+            <button
               className="btn btn-sm btn-outline-secondary"
               onClick={clearFilters}
               disabled={getActiveFiltersCount() === 0}
@@ -225,7 +206,7 @@ const AdminAppointments = () => {
               Очистити всі
             </button>
           </div>
-          
+
           <div className="filters-grid">
             {/* Основні фільтри */}
             <div className="filter-row">
@@ -237,7 +218,7 @@ const AdminAppointments = () => {
                   onChange={(e) => handleFilterChange('date_from', e.target.value)}
                 />
               </div>
-              
+
               <div className="filter-group">
                 <label>Дата до:</label>
                 <input
@@ -246,7 +227,7 @@ const AdminAppointments = () => {
                   onChange={(e) => handleFilterChange('date_to', e.target.value)}
                 />
               </div>
-              
+
               <div className="filter-group">
                 <label>Час від:</label>
                 <input
@@ -255,7 +236,7 @@ const AdminAppointments = () => {
                   onChange={(e) => handleFilterChange('time_from', e.target.value)}
                 />
               </div>
-              
+
               <div className="filter-group">
                 <label>Час до:</label>
                 <input
@@ -279,7 +260,7 @@ const AdminAppointments = () => {
                   ))}
                 </select>
               </div>
-              
+
               <div className="filter-group">
                 <label>Послуга:</label>
                 <select
@@ -292,7 +273,7 @@ const AdminAppointments = () => {
                   ))}
                 </select>
               </div>
-              
+
               <div className="filter-group">
                 <label>Статус:</label>
                 <select
@@ -306,7 +287,7 @@ const AdminAppointments = () => {
                   <option value="cancelled">Скасовано</option>
                 </select>
               </div>
-              
+
               <div className="filter-group">
                 <label>Клієнт (ім'я):</label>
                 <input
@@ -320,7 +301,7 @@ const AdminAppointments = () => {
 
             <div className="filter-row">
               <div className="filter-group">
-                                        <label>Ціна від ({language === 'en' ? 'UAH' : 'грн'}):</label>
+                <label>Ціна від ({language === 'en' ? 'UAH' : 'грн'}):</label>
                 <input
                   type="number"
                   placeholder="Мін. ціна"
@@ -328,9 +309,9 @@ const AdminAppointments = () => {
                   onChange={(e) => handleFilterChange('price_min', e.target.value)}
                 />
               </div>
-              
+
               <div className="filter-group">
-                                        <label>Ціна до ({language === 'en' ? 'UAH' : 'грн'}):</label>
+                <label>Ціна до ({language === 'en' ? 'UAH' : 'грн'}):</label>
                 <input
                   type="number"
                   placeholder="Макс. ціна"
@@ -348,7 +329,7 @@ const AdminAppointments = () => {
         <div className="list-header">
           <h3>Список бронювань ({appointments.length})</h3>
           <div className="list-actions">
-            <button 
+            <button
               className="btn btn-sm btn-outline-primary"
               onClick={fetchData}
             >
@@ -356,12 +337,12 @@ const AdminAppointments = () => {
             </button>
           </div>
         </div>
-        
+
         {appointments.length === 0 ? (
           <div className="no-appointments">
             <p>Бронювань не знайдено</p>
             {getActiveFiltersCount() > 0 && (
-              <button 
+              <button
                 className="btn btn-outline-secondary"
                 onClick={clearFilters}
               >
@@ -395,8 +376,8 @@ const AdminAppointments = () => {
                   <tr key={appointment.id}>
                     <td>{appointment.id}</td>
                     <td>
-                      {appointment.customer ? 
-                        `${appointment.customer.user?.first_name || ''} ${appointment.customer.user?.last_name || ''}`.trim() || 
+                      {appointment.customer ?
+                        `${appointment.customer.user?.first_name || ''} ${appointment.customer.user?.last_name || ''}`.trim() ||
                         appointment.guest_name :
                         appointment.guest_name
                       }
@@ -410,7 +391,7 @@ const AdminAppointments = () => {
                         {getStatusText(appointment.status)}
                       </span>
                     </td>
-                                            <td>{appointment.total_price} {language === 'en' ? 'UAH' : 'грн'}</td>
+                    <td>{appointment.total_price} {language === 'en' ? 'UAH' : 'грн'}</td>
                     <td>
                       <div className="appointment-actions">
                         <button
@@ -419,7 +400,7 @@ const AdminAppointments = () => {
                         >
                           Деталі
                         </button>
-                        
+
                         {appointment.status === 'pending' && (
                           <>
                             <button
@@ -436,7 +417,7 @@ const AdminAppointments = () => {
                             </button>
                           </>
                         )}
-                        
+
                         {appointment.status === 'confirmed' && (
                           <button
                             className="btn btn-sm btn-primary"
@@ -456,8 +437,8 @@ const AdminAppointments = () => {
       </div>
 
       {/* Модальне вікно з деталями */}
-      <Modal 
-        isOpen={modalOpen} 
+      <Modal
+        isOpen={modalOpen}
         onClose={closeModal}
         title={`Деталі бронювання #${selectedAppointment?.id}`}
       >
@@ -467,9 +448,9 @@ const AdminAppointments = () => {
               <strong>ID:</strong> {selectedAppointment.id}
             </div>
             <div className="detail-row">
-              <strong>Клієнт:</strong> 
-              {selectedAppointment.customer ? 
-                `${selectedAppointment.customer.user?.first_name || ''} ${selectedAppointment.customer.user?.last_name || ''}`.trim() || 
+              <strong>Клієнт:</strong>
+              {selectedAppointment.customer ?
+                `${selectedAppointment.customer.user?.first_name || ''} ${selectedAppointment.customer.user?.last_name || ''}`.trim() ||
                 selectedAppointment.guest_name :
                 selectedAppointment.guest_name
               }
@@ -493,13 +474,13 @@ const AdminAppointments = () => {
               <strong>Бокс:</strong> {selectedAppointment.box?.name}
             </div>
             <div className="detail-row">
-              <strong>Статус:</strong> 
+              <strong>Статус:</strong>
               <span className={getStatusBadgeClass(selectedAppointment.status)}>
                 {getStatusText(selectedAppointment.status)}
               </span>
             </div>
             <div className="detail-row">
-                                      <strong>Ціна:</strong> {selectedAppointment.total_price} {language === 'en' ? 'UAH' : 'грн'}
+              <strong>Ціна:</strong> {selectedAppointment.total_price} {language === 'en' ? 'UAH' : 'грн'}
             </div>
             {selectedAppointment.notes && (
               <div className="detail-row">

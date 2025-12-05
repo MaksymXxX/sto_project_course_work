@@ -1,0 +1,17 @@
+[MASTER]
+# Django projects often have many files
+max-line-length=100
+
+[MESSAGES CONTROL]
+# Disable only Django-specific false positives
+disable=
+    no-member,  # Django ORM .objects, .DoesNotExist, etc.
+    invalid-name,  # Django migration files have numeric names
+
+[FORMAT]
+max-line-length=100
+
+[TYPECHECK]
+# Ignore Django model attributes
+ignored-classes=optparse.Values,thread._local,unittest.case
+

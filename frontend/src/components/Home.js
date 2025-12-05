@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { translations } from '../translations/translations';
 import api from '../utils/api';
 import logo from '../assets/images/Flux_Dev_Simple_black_and_white_Minimalist_logo_for_a_car_serv_2.jpg';
 
 const Home = () => {
-  const location = useLocation();
   const { language, t } = useLanguage();
   const [stoInfo, setStoInfo] = useState(null);
   const [services, setServices] = useState([]);
@@ -64,7 +62,7 @@ const Home = () => {
       workingHoursWeekend: t('working_hours_weekend', translations.working_hours_weekend)
     };
     return content;
-  }, [language, stoInfo, t]);
+  }, [stoInfo, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (loading) {
     return <div className="text-center">{t('loading', translations.loading)}</div>;

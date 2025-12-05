@@ -1,6 +1,8 @@
-from django.core.management.base import BaseCommand
-from backend.api.models import ServiceCategory, Service
 from decimal import Decimal
+
+from django.core.management.base import BaseCommand
+
+from backend.api.models import Service, ServiceCategory
 
 
 class Command(BaseCommand):
@@ -40,7 +42,7 @@ class Command(BaseCommand):
 
         categories = {}
         for cat_data in categories_data:
-            category, created = ServiceCategory.objects.get_or_create(
+            category, created = ServiceCategory.objects.get_or_create(  # pylint: disable=no-member
                 name=cat_data['name'],
                 defaults=cat_data
             )
@@ -206,7 +208,7 @@ class Command(BaseCommand):
 
         for service_data in services_data:
             category = categories[service_data['category']]
-            service, created = Service.objects.get_or_create(
+            service, created = Service.objects.get_or_create(  # pylint: disable=no-member
                 name=service_data['name'],
                 category=category,
                 defaults={
@@ -219,5 +221,5 @@ class Command(BaseCommand):
                 self.stdout.write(f'Створено послугу: {service.name}')
 
         self.stdout.write(
-            self.style.SUCCESS('Тестові дані успішно завантажено!')
+            self.style.SUCCESS('Тестові дані успішно завантажено!')  # pylint: disable=no-member
         ) 

@@ -8,14 +8,10 @@ import userAvatar from '../assets/images/profile-icon-design-free-vector.jpg'; /
 import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
 
   const handleProfileClick = () => {
     if (isAuthenticated) {
@@ -36,7 +32,7 @@ const Navbar = () => {
             <span className="brand-text">AutoServis</span>
           </Link>
         </div>
-        
+
         {/* Центральна частина - Меню */}
         <ul className={`navbar-menu ${isAuthenticated && user?.is_staff ? 'admin-menu' : ''}`}>
           {!isAuthenticated || !user?.is_staff ? (

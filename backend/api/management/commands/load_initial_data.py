@@ -9,37 +9,39 @@ class Command(BaseCommand):
     help = 'Завантаження базових даних для СТО проекту'
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.SUCCESS('🚀 Початок завантаження базових даних...'))
-        
+        self.stdout.write(
+            self.style.SUCCESS('🚀 Початок завантаження базових даних...'))  # pylint: disable=no-member
+
         try:
             # Створення суперкористувача
             self.create_superuser()
-            
+
             # Створення категорій послуг
             self.create_service_categories()
-            
+
             # Створення послуг
             self.create_services()
-            
+
             # Створення боксів
             self.create_boxes()
-            
+
             # Створення інформації про СТО
             self.create_sto_info()
-            
+
             # Створення тестового клієнта
             self.create_test_customer()
-            
+
             self.stdout.write(
-                self.style.SUCCESS('\n✅ Завантаження базових даних завершено успішно!')
+                self.style.SUCCESS(  # pylint: disable=no-member
+                    '\n✅ Завантаження базових даних завершено успішно!')
             )
             self.stdout.write('\n📋 Доступні облікові записи:')
             self.stdout.write('   Адміністратор: admin@sto.com / admin123')
             self.stdout.write('   Тестовий клієнт: test@example.com / test123')
             self.stdout.write('\n🌐 Запустіть сервер: python manage.py runserver')
             self.stdout.write('📱 Запустіть фронтенд: cd frontend && npm start')
-            
-        except Exception as e:
+
+        except Exception as e:  # pylint: disable=broad-exception-caught
             self.stdout.write(
                 self.style.ERROR(f'❌ Помилка при завантаженні даних: {str(e)}')
             )
@@ -54,7 +56,10 @@ class Command(BaseCommand):
                 first_name='Адміністратор',
                 last_name='Системи'
             )
-            self.stdout.write(self.style.SUCCESS("✅ Суперкористувач створено: admin@sto.com / admin123"))
+            self.stdout.write(
+                self.style.SUCCESS(  # pylint: disable=no-member
+                    "✅ Суперкористувач створено: "
+                    "admin@sto.com / admin123"))
         else:
             self.stdout.write("ℹ️ Суперкористувач вже існує")
 
@@ -104,7 +109,7 @@ class Command(BaseCommand):
                 'order': 6
             }
         ]
-        
+
         for cat_data in categories_data:
             category, created = ServiceCategory.objects.get_or_create(
                 name=cat_data['name'],
@@ -191,7 +196,7 @@ class Command(BaseCommand):
                 'category_name': 'Заміна мастил'
             }
         ]
-        
+
         for service_data in services_data:
             category_name = service_data.pop('category_name')
             try:
@@ -205,7 +210,9 @@ class Command(BaseCommand):
                 )
                 if created:
                     self.stdout.write(
-                        self.style.SUCCESS(f"✅ Послуга створена: {service.name} - {service.price} грн")
+                        self.style.SUCCESS(  # pylint: disable=no-member
+                            f"✅ Послуга створена: {service.name} - "
+                            f"{service.price} грн")
                     )
                 else:
                     self.stdout.write(f"ℹ️ Послуга вже існує: {service.name}")
@@ -263,7 +270,7 @@ class Command(BaseCommand):
                 }
             }
         ]
-        
+
         for box_data in boxes_data:
             box, created = Box.objects.get_or_create(
                 name=box_data['name'],
@@ -279,12 +286,25 @@ class Command(BaseCommand):
         sto_info_data = {
             'name': 'СТО "AutoServis"',
             'name_en': 'Auto Service "AutoServis"',
-            'description': 'Професійне обслуговування та ремонт автомобілів усіх марок. Понад 10 років досвіду в галузі автомобільного сервісу.',
-            'description_en': 'Professional maintenance and repair of all car brands. Over 10 years of experience in the automotive service industry.',
+            'description': (
+                'Професійне обслуговування та ремонт автомобілів усіх марок. '
+                'Понад 10 років досвіду в галузі автомобільного сервісу.'),
+            'description_en': (
+                'Professional maintenance and repair of all car brands. '
+                'Over 10 years of experience in the automotive service industry.'),
             'motto': 'Надійність. Якість. Доступність.',
             'motto_en': 'Reliability. Quality. Accessibility.',
-            'welcome_text': 'Вітаємо на нашому офіційному сайті! Ми спеціалізуємося на комплексному обслуговуванні автомобілів усіх марок. Понад 10 років досвіду дозволяють нам гарантувати високу якість робіт і індивідуальний підхід до кожного клієнта.',
-            'welcome_text_en': 'Welcome to our official website! We specialize in comprehensive maintenance of all car brands. Over 10 years of experience allows us to guarantee high quality work and individual approach to each client.',
+            'welcome_text': (
+                'Вітаємо на нашому офіційному сайті! '
+                'Ми спеціалізуємося на комплексному обслуговуванні '
+                'автомобілів усіх марок. Понад 10 років досвіду дозволяють '
+                'нам гарантувати високу якість робіт і індивідуальний '
+                'підхід до кожного клієнта.'),
+            'welcome_text_en': (
+                'Welcome to our official website! '
+                'We specialize in comprehensive maintenance of all car brands. '
+                'Over 10 years of experience allows us to guarantee high quality '
+                'work and individual approach to each client.'),
             'what_you_can_title': 'У нас ви можете:',
             'what_you_can_title_en': 'What you can do with us:',
             'what_you_can_items': [
@@ -312,13 +332,14 @@ class Command(BaseCommand):
             'working_hours': 'Пн-Пт: 8:00-18:00, Сб-Нд: 9:00-16:00',
             'working_hours_en': 'Mon-Fri: 8:00-18:00, Sat-Sun: 9:00-16:00'
         }
-        
-        sto_info, created = STOInfo.objects.get_or_create(
+
+        sto_info, created = STOInfo.objects.get_or_create(  # pylint: disable=no-member,unused-variable
             id=1,
             defaults=sto_info_data
         )
         if created:
-            self.stdout.write(self.style.SUCCESS("✅ Інформація про СТО створена"))
+            self.stdout.write(
+                self.style.SUCCESS("✅ Інформація про СТО створена"))  # pylint: disable=no-member
         else:
             self.stdout.write("ℹ️ Інформація про СТО вже існує")
 
@@ -332,7 +353,10 @@ class Command(BaseCommand):
                 first_name='Тестовий',
                 last_name='Користувач'
             )
-            Customer.objects.create(user=user)
-            self.stdout.write(self.style.SUCCESS("✅ Тестовий клієнт створено: test@example.com / test123"))
+            Customer.objects.create(user=user)  # pylint: disable=no-member
+            self.stdout.write(
+                self.style.SUCCESS(  # pylint: disable=no-member
+                    "✅ Тестовий клієнт створено: "
+                    "test@example.com / test123"))
         else:
             self.stdout.write("ℹ️ Тестовий клієнт вже існує")

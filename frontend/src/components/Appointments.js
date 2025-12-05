@@ -3,7 +3,7 @@ import api from '../utils/api';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Appointments = () => {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 

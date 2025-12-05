@@ -13,7 +13,7 @@ class Command(BaseCommand):
             'Діагностика ходової частини': 45,
             'Комп\'ютерна діагностика': 20,
             'Діагностика електрообладнання': 40,
-            
+
             # Ремонт та заміна
             'Заміна амортизаторів': 120,
             'Заміна гальмівних колодок': 90,
@@ -28,19 +28,19 @@ class Command(BaseCommand):
             'Ремонт двигуна': 480,  # 8 годин
             'Ремонт підвіски': 180,
             'Ремонт електроніки': 120,
-            
+
             # Шиномонтаж
             'Балансування коліс': 30,
             'Зняття/установка колеса': 15,
             'Комплексний шиномонтаж (4 колеса)': 120,
             'Ремонт проколу': 30,
-            
+
             # Електроніка та додаткове обладнання
             'Заміна акумулятора': 45,
             'Установка сигналізації': 180,
             'Установка відеореєстратора': 90,
             'Програмування блоків': 60,
-            
+
             # Мийка та догляд
             'Автомийка (зовнішня + внутрішня)': 60,
             'Полірування фар': 120,
@@ -48,21 +48,27 @@ class Command(BaseCommand):
         }
 
         updated_count = 0
-        
-        for service in Service.objects.all():
+
+        for service in Service.objects.all():  # pylint: disable=no-member
             if service.name in service_durations:
                 old_duration = service.duration_minutes
                 service.duration_minutes = service_durations[service.name]
                 service.save()
                 self.stdout.write(
-                    self.style.SUCCESS(f'✅ {service.name}: {old_duration} → {service.duration_minutes} хв')
+                    self.style.SUCCESS(  # pylint: disable=no-member
+                        f'✅ {service.name}: {old_duration} → '
+                        f'{service.duration_minutes} хв')
                 )
                 updated_count += 1
             else:
                 self.stdout.write(
-                    self.style.WARNING(f'⚠️  {service.name}: немає в словнику (залишається {service.duration_minutes} хв)')
+                    self.style.WARNING(  # pylint: disable=no-member
+                        f'⚠️  {service.name}: немає в словнику '
+                        f'(залишається {service.duration_minutes} хв)')
                 )
-        
+
         self.stdout.write(
-            self.style.SUCCESS(f'\n📊 Оновлено {updated_count} послуг з {Service.objects.count()} загалом')
+            self.style.SUCCESS(  # pylint: disable=no-member
+                f'\n📊 Оновлено {updated_count} послуг з '
+                f'{Service.objects.count()} загалом')  # pylint: disable=no-member
         ) 

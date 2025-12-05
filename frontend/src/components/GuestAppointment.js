@@ -23,10 +23,6 @@ const GuestAppointment = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchServices();
-  }, [language]);
-
   const fetchServices = async () => {
     try {
       const response = await api.get(`/api/services/?language=${language}`);
@@ -36,6 +32,10 @@ const GuestAppointment = () => {
       toast.error(t('error_loading_services', { uk: 'Помилка отримання послуг', en: 'Error loading services' }));
     }
   };
+
+  useEffect(() => {
+    fetchServices();
+  }, [language]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchAvailableTimes = async (date, serviceId) => {
     try {
@@ -71,34 +71,6 @@ const GuestAppointment = () => {
     }
   };
 
-  const checkDateAvailability = async (date) => {
-    try {
-      const response = await api.get(`/api/boxes/available_times/?date=${date}`);
-      const availableTimes = response.data.available_times || [];
-      
-      if (availableTimes.length === 0) {
-        toast.warning('На цю дату немає доступних слотів. Оберіть іншу дату.');
-        setFormData(prev => ({ ...prev, appointment_date: '', appointment_time: '' }));
-      }
-    } catch (error) {
-      console.error('Помилка перевірки доступності дати:', error);
-    }
-  };
-
-  const checkTimeAvailability = async (date, time) => {
-    try {
-      const response = await api.get(`/api/boxes/available_boxes/?date=${date}&time=${time}`);
-      const availableBoxes = response.data;
-      
-      if (availableBoxes.length === 0) {
-        toast.warning('На цей час немає вільних боксів. Оберіть інший час.');
-        setFormData(prev => ({ ...prev, appointment_time: '' }));
-      }
-    } catch (error) {
-      console.error('Помилка перевірки доступності часу:', error);
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -117,19 +89,19 @@ const GuestAppointment = () => {
       console.log('Відправляємо дані:', appointmentData);
       const response = await api.post('/api/guest-appointments/', appointmentData);
       console.log('Отримана відповідь:', response.data);
-      
+
       // Показуємо інформацію про призначений бокс
       if (response.data.box) {
         console.log('Бокс призначено:', response.data.box.name);
-        toast.success(t('appointment_created_with_box', { 
-          uk: `Запис успішно створено! Призначено бокс: ${response.data.box.name}`, 
-          en: `Appointment successfully created! Assigned box: ${response.data.box.name}` 
+        toast.success(t('appointment_created_with_box', {
+          uk: `Запис успішно створено! Призначено бокс: ${response.data.box.name}`,
+          en: `Appointment successfully created! Assigned box: ${response.data.box.name}`
         }));
       } else {
         console.log('Бокс НЕ призначено');
         toast.success(t('appointment_created', translations.appointment_created));
       }
-      
+
       navigate('/');
     } catch (error) {
       console.error('Помилка створення запису:', error);
@@ -150,7 +122,7 @@ const GuestAppointment = () => {
       <div className="card-header">
         <h2 className="card-title">{t('book_appointment', translations.book_appointment)}</h2>
       </div>
-      
+
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="guest_name">{t('first_name', translations.first_name)}:</label>
@@ -164,7 +136,7 @@ const GuestAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="guest_phone">{t('phone', translations.phone)}:</label>
           <input
@@ -177,7 +149,7 @@ const GuestAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="guest_email">{t('email', translations.email)}:</label>
           <input
@@ -190,7 +162,7 @@ const GuestAppointment = () => {
             required
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="service">{t('select_service', translations.select_service)} *</label>
           <select
@@ -245,7 +217,7 @@ const GuestAppointment = () => {
             <small className="text-muted">{t('no_available_times', { uk: 'Немає доступних часів для обраної дати', en: 'No available times for selected date' })}</small>
           )}
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="notes">{t('notes', translations.notes)}:</label>
           <textarea
@@ -257,7 +229,7 @@ const GuestAppointment = () => {
             rows="3"
           />
         </div>
-        
+
         <button
           type="submit"
           className="btn btn-primary w-100"
